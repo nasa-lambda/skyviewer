@@ -26,7 +26,7 @@ using namespace std;
 			Constants.
 */
 static double pi      = 3.141592653589793;
-static double deg2rad = pi / 360.0;
+static double deg2rad = pi / 180.0;
 /* =============================================================================
 The HealpixMap class defines a skymap that uses the HEALPIX pixelization scheme.
 ============================================================================= */
