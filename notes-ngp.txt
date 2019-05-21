@@ -1,0 +1,41 @@
+Notes from Nicholas, May 9, 2008
+
+Must be compiled/linked against a QT4 compiled version of libQGLViewer
+
+Easy enough to do.
+Assume I have such a version in /home/phillips/libQGLViewer-2.2.6-3-qt4/
+Then 
+
+/usr/lib/qt4/bin/qmake INCLUDE_DIR=/home/phillips/libQGLViewer-2.2.6-3-qt4/include LIB_DIR=/home/phillips/libQGLViewer-2.2.6-3-qt4/lib
+make
+export export LD_LIBRARY_PATH=/home/phillips/libQGLViewer-2.2.6-3-qt4/lib
+./skyviewer
+
+Notes from using it:
+	- 'New' should be 'Open'
+	- Should be able to select from a list of previously opened files
+	- There should be a 'New' that opens a new viewer window
+	- For information icon, should say 'Info'. 'Inf' looks like infinity.
+		Could be confusion wrt to FITS and bad pixel values/infinite pixs values
+	- Polarization vectors are enabled even when the map has no P data
+
+	- Range dialog is funky, and not in a 'going to funkytown' way.
+		o Have 'Min Auto-track' off, slide 'Max' < 0, now turn
+		  auto-track on. Bad behavior follows, gets confused
+
+		o Should 'Rescale' be called 'Reset'? It looks like its
+		  resetting the display range, not changing the scaling
+		  of the map.
+
+		o This is the big one. We will have to think how to do this
+		  right. The Min/Max sliders are completely non-responsive after
+		  any movement. They stay this way until the texture is fully
+		  updated. Makes it maddening to fine tune the range.
+
+		  What we need to do is have the texture update run in a separate
+		  thread. Any new movement of the sliders kills the old thread
+		  and starts a new one. This way the GUI is always getting CPU time
+		  and  its feel is responsive. Also, the displayed range will more
+		  closely in time track the user's input. (After killing the old
+		  thread and starting a new one, we could update the GL texture,
+		  this way the user is getting partial feedback on range changes) 

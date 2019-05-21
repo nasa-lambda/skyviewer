@@ -1,0 +1,979 @@
+/* ====================================================================================
+The definition of the file load progress window class.
+
+Written by Michael R. Greason, ADNET, 23 August 2007.
+==================================================================================== */
+/*
+			Fetch header files.
+*/
+#include <iostream>
+#include <math.h>
+#include <string.h>
+#include <QPoint>
+#include <QSize>
+#include <QMessageBox>
+#include <QStringList>
+#include <QHeaderView>
+#include <QTableWidgetItem>
+#include <stdio.h>
+#include "mainwindow.h"
+#include "fileprogress.h"
+#include "healpixmap.h"
+
+using namespace std;
+
+#define TEMPFMT "%8.5lf"
+#define NOBSFMT "%8.1lf"
+#define DUMHDR  "XXXXXXXXXX"
+#define DUMVAL  "MMMMMMMM"
+/* ====================================================================================
+			The file load progress monitor window class.  It descends from
+			QDialog and from the Ui::RangeDialog class that was created 
+			by QT Designer.
+==================================================================================== */
+/* ------------------------------------------------------------------------------------
+The class constructor.
+
+Arguments:
+	parent - The parent wiget/window.
+
+Written by Nicholas Phillips.
+QT4 implementation.  Michael R. Greason, ADNET, 31 August 2007.
+------------------------------------------------------------------------------------ */
+fileProgress::fileProgress(QWidget *parent) : QDialog(parent)
+{
+	skymap = NULL;
+	mwin   = (mainWindow *) parent;
+	for (int i = 0; i < 5; i++) avg[i] = stddev[i] = 0.;
+/*
+			Populate this window.
+*/
+	setupUi(this);
+	statisticsTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
+	pixelTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
+	pixelStatistics->setEditTriggers(QAbstractItemView::NoEditTriggers);
+/*
+			Define the connections.
+*/
+	connect(pixelTable, SIGNAL(cellDoubleClicked(int,int)), this, SLOT(rowSelected(int,int)));
+/*
+			Hide the window.
+*/
+	hide();
+	defaults();
+/*
+			Other stuff.
+*/
+	QPoint pt;
+	QSize  sz, pcontsz;
+	sz         = size();
+	pcontsz    = pixelContainer->size();
+	mintabwid  = pcontsz.width();
+	delwidth   = sz.width()  - pcontsz.width();
+	delheightc = sz.height() - pcontsz.height();
+	sz         = pixelTable->size();
+	delheightt = pcontsz.height() - sz.height();
+	pt         = pixelTable->pos();
+	offheight  = pt.y();
+}
+/* ------------------------------------------------------------------------------------
+"rowSelected" responds to a double click.
+
+Arguments:
+	r - The selected row.
+	c - The selected column.  Not used.
+
+Returned:
+	Nothing.
+
+Written by Michael R. Greason, ADNET, 4 September 2007.
+------------------------------------------------------------------------------------ */
+void fileProgress::rowSelected(int r, int /*c*/)
+{
+	QString msg(tr("Do you wish to deselect pixel "));
+/*
+			Get the pixel number.
+*/
+	QTableWidgetItem *item = pixelTable->verticalHeaderItem(r);
+	int pix = (item->text()).toInt();
+/*
+			Get confirmation from the user.
+*/
+	msg += QString::number(pix) + tr("?");
+	if (QMessageBox::question(this, tr("Skyviewer -- Remove Selected Pixel"),
+			msg, QMessageBox::Ok | QMessageBox::Cancel, QMessageBox::Ok) != QMessageBox::Ok) return;
+/*
+			Process the pixel.
+*/
+	mwin->selectPixel(pix);
+}
+/* ------------------------------------------------------------------------------------
+"addTableRow" adds a row to a table.
+
+Arguments:
+	table - The table to add to.
+
+Returned:
+	row - The index of the just-added row.
+
+Written by Michael R. Greason, ADNET, 2 September 2007.
+------------------------------------------------------------------------------------ */
+int fileProgress::addTableRow (QTableWidget *table)
+{
+	QTableWidgetItem *item, *item0;
+	int i = 0, row = table->rowCount();
+	table->insertRow(row);
+
+	item0 = item = new QTableWidgetItem;
+	item->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
+	table->setItem(row, i++, item);
+
+	while (i < colcnt)
+	{
+		item = new QTableWidgetItem;
+		item->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
+		table->setItem(row, i++, item);
+	}
+
+	table->setCurrentItem(item0);
+	table->setRowHeight(row, 22);
+	return row;
+}
+/* ------------------------------------------------------------------------------------
+"colWidths" sets the column widths to the map statistics table widths.  It leads off
+with a "resizeRowsToContents" to get the heights right before setting widths.
+
+Arguments:
+	table - The table to update.
+
+Returned:
+	Nothing.
+
+Written by Michael R. Greason, ADNET, 2 September 2007.
+------------------------------------------------------------------------------------ */
+void fileProgress::colWidths (QTableWidget *table)
+{
+	int c, wid;
+	table->resizeRowsToContents();
+	for (c = 0; c < colcnt; c++)
+	{
+		wid = statisticsTable->columnWidth(c);
+		table->setColumnWidth(c, wid);
+	}
+}
+/* ------------------------------------------------------------------------------------
+"mapInfo" fills the map statistics table.  It finishes up by configuring the pixel
+selection table.
+
+Arguments:
+	map - The skymap to use as the source of info.
+
+Returned:
+	Nothing.
+
+Written by Michael R. Greason, ADNET, 2 September 2007.
+------------------------------------------------------------------------------------ */
+void fileProgress::mapInfo (Skymap *map)
+{
+	char numstr[24];
+	QStringList hdr;
+	int c, r;
+/*
+			Prelim. initialization.
+*/
+	skymap = map;
+	for (c = 0; c < 5; c++) avg[c] = stddev[c] = 0.;
+	statisticsTable->clear();	statisticsTable->setRowCount(0);
+	pixelTable->clear();		pixelTable->setRowCount(0);
+	pixelStatistics->clear(); 	pixelStatistics->setRowCount(0);
+/*
+			Define the header.
+*/
+	colcnt = 0;
+	if (map->has_Temperature())
+	{
+		colcnt++; hdr << tr("Temp");
+	}
+	if (map->has_Polarization())
+	{
+		colcnt++; hdr << tr("Q Polar");
+		colcnt++; hdr << tr("U Polar");
+		colcnt++; hdr << tr("P Polar");
+	}
+	if (map->has_Nobs())
+	{
+		colcnt++; hdr << tr("Num Obs");
+	}
+	statisticsTable->setColumnCount(colcnt);
+	statisticsTable->setHorizontalHeaderLabels(hdr);
+	hdr.clear();
+/*
+			Dummy row.
+*/
+	hdr << DUMHDR;
+	r = addTableRow(statisticsTable);
+	strcpy(numstr, DUMVAL);
+	for (c = 0; c < colcnt; c++)
+		statisticsTable->item(r, c)->setText(QString::fromAscii(numstr));
+	statisticsTable->hideRow(r);
+/*
+			Fill each row.
+
+				Mean.
+*/
+	hdr << "Mean";
+	r = addTableRow(statisticsTable);
+	c = 0;
+	if (map->has_Temperature())
+	{
+		sprintf(numstr, TEMPFMT, map->getMeanT());
+		statisticsTable->item(r, c++)->setText(QString::fromAscii(numstr));
+	}
+	if (map->has_Polarization())
+	{
+		sprintf(numstr, TEMPFMT, map->getMeanQ());
+		statisticsTable->item(r, c++)->setText(QString::fromAscii(numstr));
+
+		sprintf(numstr, TEMPFMT, map->getMeanU());
+		statisticsTable->item(r, c++)->setText(QString::fromAscii(numstr));
+
+		sprintf(numstr, TEMPFMT, map->getMeanPmag());
+		statisticsTable->item(r, c++)->setText(QString::fromAscii(numstr));
+	}
+	if (map->has_Nobs())
+	{
+		sprintf(numstr, NOBSFMT, map->getMeanNobs());
+		statisticsTable->item(r, c++)->setText(QString::fromAscii(numstr));
+	}
+/*
+				Standard deviation.
+*/
+	hdr << "Std. Dev.";
+	r = addTableRow(statisticsTable);
+	c = 0;
+	if (map->has_Temperature())
+	{
+		sprintf(numstr, TEMPFMT, map->getStdDevT());
+		statisticsTable->item(r, c++)->setText(QString::fromAscii(numstr));
+	}
+	if (map->has_Polarization())
+	{
+		sprintf(numstr, TEMPFMT, map->getStdDevQ());
+		statisticsTable->item(r, c++)->setText(QString::fromAscii(numstr));
+
+		sprintf(numstr, TEMPFMT, map->getStdDevU());
+		statisticsTable->item(r, c++)->setText(QString::fromAscii(numstr));
+
+		sprintf(numstr, TEMPFMT, map->getStdDevPmag());
+		statisticsTable->item(r, c++)->setText(QString::fromAscii(numstr));
+	}
+	if (map->has_Nobs())
+	{
+		sprintf(numstr, NOBSFMT, map->getStdDevNobs());
+		statisticsTable->item(r, c++)->setText(QString::fromAscii(numstr));
+	}
+/*
+				Minimum.
+*/
+	hdr << "Minimum";
+	r = addTableRow(statisticsTable);
+	c = 0;
+	if (map->has_Temperature())
+	{
+		sprintf(numstr, TEMPFMT, map->getMinT());
+		statisticsTable->item(r, c++)->setText(QString::fromAscii(numstr));
+	}
+	if (map->has_Polarization())
+	{
+		sprintf(numstr, TEMPFMT, map->getMinQ());
+		statisticsTable->item(r, c++)->setText(QString::fromAscii(numstr));
+
+		sprintf(numstr, TEMPFMT, map->getMinU());
+		statisticsTable->item(r, c++)->setText(QString::fromAscii(numstr));
+
+		sprintf(numstr, TEMPFMT, map->getMinPmag());
+		statisticsTable->item(r, c++)->setText(QString::fromAscii(numstr));
+	}
+	if (map->has_Nobs())
+	{
+		sprintf(numstr, NOBSFMT, map->getMinNobs());
+		statisticsTable->item(r, c++)->setText(QString::fromAscii(numstr));
+	}
+/*
+				Maximum.
+*/
+	hdr << "Maximum";
+	r = addTableRow(statisticsTable);
+	c = 0;
+	if (map->has_Temperature())
+	{
+		sprintf(numstr, TEMPFMT, map->getMaxT());
+		statisticsTable->item(r, c++)->setText(QString::fromAscii(numstr));
+	}
+	if (map->has_Polarization())
+	{
+		sprintf(numstr, TEMPFMT, map->getMaxQ());
+		statisticsTable->item(r, c++)->setText(QString::fromAscii(numstr));
+
+		sprintf(numstr, TEMPFMT, map->getMaxU());
+		statisticsTable->item(r, c++)->setText(QString::fromAscii(numstr));
+
+		sprintf(numstr, TEMPFMT, map->getMaxPmag());
+		statisticsTable->item(r, c++)->setText(QString::fromAscii(numstr));
+	}
+	if (map->has_Nobs())
+	{
+		sprintf(numstr, NOBSFMT, map->getMaxNobs());
+		statisticsTable->item(r, c++)->setText(QString::fromAscii(numstr));
+	}
+/*
+			Final configuration.
+*/
+	statisticsTable->setVerticalHeaderLabels(hdr);
+	statisticsTable->resizeColumnsToContents();
+	statisticsTable->resizeRowsToContents();
+/*
+			Configure the pixel selection table.
+*/
+	pixelConfig();
+}
+/* ------------------------------------------------------------------------------------
+"pixelConfig" performs the initial configuration of the pixel selection table.
+
+Arguments:
+	None.
+
+Returned:
+	Nothing.
+
+Written by Michael R. Greason, ADNET, 2 September 2007.
+------------------------------------------------------------------------------------ */
+void fileProgress::pixelConfig (void)
+{
+	char numstr[24];
+	int r, c;
+	QStringList hdr;
+	if (skymap == NULL) return;
+/*
+			Set the number of columns.
+*/
+	pixelTable->setColumnCount(colcnt);
+	pixelStatistics->setColumnCount(colcnt);
+/*
+			Define and hide the horizontal headers.
+*/
+	if (skymap->has_Temperature())
+	{
+		hdr << tr("Temp");
+	}
+	if (skymap->has_Polarization())
+	{
+		hdr << tr("Q Polar");
+		hdr << tr("U Polar");
+		hdr << tr("P Polar");
+	}
+	if (skymap->has_Nobs())
+	{
+		hdr << tr("Num Obs");
+	}
+	pixelTable->setHorizontalHeaderLabels(hdr);
+	pixelTable->horizontalHeader()->hide();
+	pixelStatistics->setHorizontalHeaderLabels(hdr);
+	pixelStatistics->horizontalHeader()->hide();
+	hdr.clear();
+/*
+			Add a dummy row to the pixel stats. table.
+*/
+	strcpy(numstr, DUMVAL);
+	r = addTableRow(pixelStatistics);
+	hdr << DUMHDR;
+	for (c = 0; c < colcnt; c++)
+	{
+		pixelStatistics->item(r, c)->setText(QString::fromAscii(numstr));
+	}
+	pixelStatistics->hideRow(r);
+/*
+			Insert two rows into the statistics table; configure its heights and widths.
+*/
+	c = addTableRow(pixelStatistics);
+	c = addTableRow(pixelStatistics);
+	hdr << "Mean" << "Std. Dev.";
+	pixelStatistics->setVerticalHeaderLabels(hdr);
+	colWidths(pixelStatistics);
+/*
+			Add a dummy row to the pixel list table.
+*/
+	hdr.clear();
+	hdr << "XXXXXXXXXX";
+	r = addTableRow(pixelTable);
+	for (c = 0; c < colcnt; c++)
+	{
+		pixelTable->item(r, c)->setText(QString::fromAscii(numstr));
+	}
+	pixelTable->hideRow(r);
+	pixelTable->setVerticalHeaderLabels(hdr);
+	colWidths(pixelTable);
+}
+/* ------------------------------------------------------------------------------------
+"addPixelInfo" adds a pixel to the pixel selection table.
+
+Arguments:
+	pix - The just-added pixel.
+
+Returned:
+	Nothing.
+
+Written by Michael R. Greason, ADNET, 2 September 2007.
+------------------------------------------------------------------------------------ */
+void fileProgress::addPixelInfo (int pix)
+{
+	char numstr[24];
+	int r, c;
+	QTableWidgetItem *item;
+/*
+			Add a new row.
+*/
+	r = addTableRow(pixelTable);
+/*
+			Assign the pixel number as the vertical header.
+*/
+	item = new QTableWidgetItem;
+	item->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+	item->setText(QString::number(pix));	
+	pixelTable->setVerticalHeaderItem(r, item);
+/*
+			Update the selected pixel table and accumulate statistics.
+*/
+	c = 0;
+	if (skymap->has_Temperature())
+	{
+		sprintf(numstr, TEMPFMT, (*skymap)[pix].T());
+		pixelTable->item(r, c)->setText(QString::fromAscii(numstr));
+		avg[c] += (*skymap)[pix].T();
+		stddev[c++] += (*skymap)[pix].T() * (*skymap)[pix].T();
+	}
+	if (skymap->has_Polarization())
+	{
+		sprintf(numstr, TEMPFMT, (*skymap)[pix].Q());
+		pixelTable->item(r, c)->setText(QString::fromAscii(numstr));
+		avg[c] += (*skymap)[pix].Q();
+		stddev[c++] += (*skymap)[pix].Q() * (*skymap)[pix].Q();
+
+		sprintf(numstr, TEMPFMT, (*skymap)[pix].U());
+		pixelTable->item(r, c)->setText(QString::fromAscii(numstr));
+		avg[c] += (*skymap)[pix].U();
+		stddev[c++] += (*skymap)[pix].U() * (*skymap)[pix].U();
+
+		sprintf(numstr, TEMPFMT, (*skymap)[pix].Pmag());
+		pixelTable->item(r, c)->setText(QString::fromAscii(numstr));
+		avg[c] += (*skymap)[pix].Pmag();
+		stddev[c++] += (*skymap)[pix].Pmag() * (*skymap)[pix].Pmag();
+	}
+	if (skymap->has_Nobs())
+	{
+		sprintf(numstr, NOBSFMT, (*skymap)[pix].Nobs());
+		pixelTable->item(r, c)->setText(QString::fromAscii(numstr));
+		avg[c] += (*skymap)[pix].Nobs();
+		stddev[c++] += (*skymap)[pix].Nobs() * (*skymap)[pix].Nobs();
+	}
+/*
+			Final row configuration.
+*/
+	colWidths(pixelTable);
+/*
+			Update the statistics window.
+*/
+	calcPixelStats();
+}
+/* ------------------------------------------------------------------------------------
+"delPixelInfo" removes a pixel from the pixel selection table.
+
+Arguments:
+	pix - The pixel.
+
+Returned:
+	Nothing.
+
+Written by Michael R. Greason, ADNET, 2 September 2007.
+------------------------------------------------------------------------------------ */
+void fileProgress::delPixelInfo (int pix)
+{
+	QTableWidgetItem *item;
+	bool flg;
+	int  n, row, r = 0, c = 0;
+/*
+			Find the row containing the pixel.
+*/
+	flg = false;
+	n = pixelTable->rowCount();
+	if (n <= 1) return;
+	for (r = 1; r < n; r++)
+	{
+		item = pixelTable->verticalHeaderItem(r);
+		c = (item->text()).toInt();
+		if (c == pix)
+		{
+			flg = true;
+			row = r;
+			pixelTable->removeRow(r);
+			break;
+		}
+	}
+	if (!flg) return;
+/*
+			Remove the pixel from the  accumulated statistics.
+*/
+	c = 0;
+	if (skymap->has_Temperature())
+	{
+		avg[c] -= (*skymap)[pix].T();
+		stddev[c++] -= (*skymap)[pix].T() * (*skymap)[pix].T();
+	}
+	if (skymap->has_Polarization())
+	{
+		avg[c] -= (*skymap)[pix].Q();
+		stddev[c++] -= (*skymap)[pix].Q() * (*skymap)[pix].Q();
+		avg[c] -= (*skymap)[pix].U();
+		stddev[c++] -= (*skymap)[pix].U() * (*skymap)[pix].U();
+		avg[c] -= (*skymap)[pix].Pmag();
+		stddev[c++] -= (*skymap)[pix].Pmag() * (*skymap)[pix].Pmag();
+	}
+	if (skymap->has_Nobs())
+	{
+		avg[c] -= (*skymap)[pix].Nobs();
+		stddev[c++] -= (*skymap)[pix].Nobs() * (*skymap)[pix].Nobs();
+	}
+/*
+			Update the statistics window.
+*/
+	calcPixelStats();
+}
+/* ------------------------------------------------------------------------------------
+"calcPixelStats" calculates pixel statistics and updates that window.
+
+Arguments:
+	None.
+
+Returned:
+	Nothing.
+
+Written by Michael R. Greason, ADNET, 2 September 2007.
+------------------------------------------------------------------------------------ */
+void fileProgress::calcPixelStats (void)
+{
+	const int stdrow = 2, avgrow = 1;
+	char numstr[24];
+	int c = 0, n, d;
+	double v, dn, dns, s;
+	n = pixelTable->rowCount() - 1;
+	dn = double(n);
+	dns = dn * (dn - 1.);
+	if (skymap->has_Temperature())
+	{
+		if (n > 1)
+		{
+			s = v = sqrt(((dn * stddev[c]) - (avg[c] * avg[c])) / dns);
+			sprintf(numstr, TEMPFMT, v);
+			pixelStatistics->item(stdrow, c)->setText(QString::fromAscii(numstr));
+		}
+		else
+		{
+			pixelStatistics->item(stdrow, c)->setText(QString::fromAscii("N/A"));
+		}
+		if (n > 0)
+		{
+			v = avg[c] / dn;
+			sprintf(numstr, TEMPFMT, v);
+			pixelStatistics->item(avgrow, c)->setText(QString::fromAscii(numstr));
+		}
+		else
+		{
+			pixelStatistics->item(avgrow, c)->setText(QString::fromAscii("N/A"));
+		}
+		c++;
+	}
+	if (skymap->has_Polarization())
+	{
+		if (n > 1)
+		{
+			d = c;
+
+			v = sqrt(((dn * stddev[d]) - (avg[d] * avg[d])) / dns);
+			sprintf(numstr, TEMPFMT, v);
+			pixelStatistics->item(stdrow, d++)->setText(QString::fromAscii(numstr));
+
+			v = sqrt(((dn * stddev[d]) - (avg[d] * avg[d])) / dns);
+			sprintf(numstr, TEMPFMT, v);
+			pixelStatistics->item(stdrow, d++)->setText(QString::fromAscii(numstr));
+
+			v = sqrt(((dn * stddev[d]) - (avg[d] * avg[d])) / dns);
+			sprintf(numstr, TEMPFMT, v);
+			pixelStatistics->item(stdrow, d++)->setText(QString::fromAscii(numstr));
+		}
+		else
+		{
+			d = c;
+			pixelStatistics->item(stdrow, d++)->setText(QString::fromAscii("N/A"));
+			pixelStatistics->item(stdrow, d++)->setText(QString::fromAscii("N/A"));
+			pixelStatistics->item(stdrow, d++)->setText(QString::fromAscii("N/A"));
+		}
+		if (n > 0)
+		{
+			d = c;
+
+			v = avg[d] / dn;
+			sprintf(numstr, TEMPFMT, v);
+			pixelStatistics->item(avgrow, d++)->setText(QString::fromAscii(numstr));
+
+			v = avg[d] / dn;
+			sprintf(numstr, TEMPFMT, v);
+			pixelStatistics->item(avgrow, d++)->setText(QString::fromAscii(numstr));
+
+			v = avg[d] / dn;
+			sprintf(numstr, TEMPFMT, v);
+			pixelStatistics->item(avgrow, d++)->setText(QString::fromAscii(numstr));
+		}
+		else
+		{
+			d = c;
+			pixelStatistics->item(avgrow, d++)->setText(QString::fromAscii("N/A"));
+			pixelStatistics->item(avgrow, d++)->setText(QString::fromAscii("N/A"));
+			pixelStatistics->item(avgrow, d++)->setText(QString::fromAscii("N/A"));
+		}
+		c += 3;
+	}
+	if (skymap->has_Nobs())
+	{
+		if (n > 1)
+		{
+			v = sqrt(((dn * stddev[c]) - (avg[c] * avg[c])) / (dn * (dn - 1.)));
+			sprintf(numstr, NOBSFMT, v);
+			pixelStatistics->item(stdrow, c)->setText(QString::fromAscii(numstr));
+		}
+		else
+		{
+			pixelStatistics->item(stdrow, c)->setText(QString::fromAscii("N/A"));
+		}
+		if (n > 0)
+		{
+			v = avg[c] / dn;
+			sprintf(numstr, NOBSFMT, v);
+			pixelStatistics->item(avgrow, c)->setText(QString::fromAscii(numstr));
+		}
+		else
+		{
+			pixelStatistics->item(avgrow, c)->setText(QString::fromAscii("N/A"));
+		}
+	}
+}
+/* ------------------------------------------------------------------------------------
+"defaults" fills the labels with default/placeholder text.
+
+Arguments:
+	None.
+
+Returned:
+	Nothing.
+
+Written by Nicholas Phillips.
+QT4 implementation.  Michael R. Greason, ADNET, 31 August 2007.
+------------------------------------------------------------------------------------ */
+void fileProgress::defaults (void)
+{
+	curr = 0;
+	QString blnk(tr(""));
+	infoFilename->setText(blnk);
+	infoStatus->setText(tr("Loading"));
+	infoOrdering->setText(blnk);
+	infoNSide->setText(blnk);
+	blnk = tr("TBD");
+	infoTemp->setText(blnk);
+	infoQPolar->setText(blnk);
+	infoUPolar->setText(blnk);
+	infoNObs->setText(blnk);
+	blnk = tr("N/A");
+	infoTempProg->setText(blnk);
+	infoQPolarProg->setText(blnk);
+	infoUPolarProg->setText(blnk);
+	infoNObsProg->setText(blnk);
+	infoPPolarProg->setText(blnk);
+}
+/* ------------------------------------------------------------------------------------
+"loadFile" indicates that a file is to be loaded.  Show the window, set the defaults,
+and display the filename.
+
+Arguments:
+	name - The name of the file.
+
+Returned:
+	Nothing.
+
+Written by Nicholas Phillips.
+QT4 implementation.  Michael R. Greason, ADNET, 31 August 2007.
+------------------------------------------------------------------------------------ */
+void fileProgress::loadFile (const QString &name)
+{
+	defaults();
+	infoFilename->setText(name);
+	show();
+}
+void fileProgress::loadFile (const char *name)
+{
+	QString str(tr(name));
+	loadFile(str);
+}
+/* ------------------------------------------------------------------------------------
+"loadNSide" writes the nside and ordering info to the window.
+
+Arguments:
+	ns  - The nside.
+	ord - The ordering: 1=Nested, 2=Ring.
+
+Returned:
+	Nothing.
+
+Written by Nicholas Phillips.
+QT4 implementation.  Michael R. Greason, ADNET, 31 August 2007.
+------------------------------------------------------------------------------------ */
+void fileProgress::loadNSide (int ns, int ord)
+{
+	QString str;
+	infoNSide->setText(str.setNum(ns));
+	infoOrdering->setText(str.fromAscii((ord == 2) ? "(ring ordering)" : "(nested ordering)"));
+}
+/* ------------------------------------------------------------------------------------
+"done" is called to indicate that the last sub-map that was being loaded finished.
+
+Arguments:
+	None.
+
+Returned:
+	Nothing.
+
+Written by Nicholas Phillips.
+QT4 implementation.  Michael R. Greason, ADNET, 31 August 2007.
+------------------------------------------------------------------------------------ */
+void fileProgress::done (void)
+{
+	if (curr <= 0) return;
+	switch (curr)
+	{
+		case 1:
+			infoTempProg->setText(tr("Loaded"));
+			break;
+		case 2:
+			infoQPolarProg->setText(tr("Loaded"));
+			break;
+		case 3:
+			infoUPolarProg->setText(tr("Loaded"));
+			break;
+		case 4:
+			infoPPolarProg->setText(tr("Computed"));
+			break;
+		case 5:
+			infoNObsProg->setText(tr("Loaded"));
+			break;
+	}
+	curr = 0;
+}
+/* ------------------------------------------------------------------------------------
+"loadTemperature" indicates that temperature data is being loaded.
+
+Arguments:
+	None.
+
+Returned:
+	Nothing.
+
+Written by Nicholas Phillips.
+QT4 implementation.  Michael R. Greason, ADNET, 31 August 2007.
+------------------------------------------------------------------------------------ */
+void fileProgress::loadTemperature (void)
+{
+	done();
+	curr = 1;
+	infoTemp->setText(tr("Present"));
+	infoTempProg->setText(tr("Loading"));
+}
+/* ------------------------------------------------------------------------------------
+"loadQPolarization" indicates that Q polarization data is being loaded.
+
+Arguments:
+	None.
+
+Returned:
+	Nothing.
+
+Written by Nicholas Phillips.
+QT4 implementation.  Michael R. Greason, ADNET, 31 August 2007.
+------------------------------------------------------------------------------------ */
+void fileProgress::loadQPolarization (void)
+{
+	done();
+	curr = 2;
+	infoQPolar->setText(tr("Present"));
+	infoQPolarProg->setText(tr("Loading"));
+}
+/* ------------------------------------------------------------------------------------
+"loadUPolarization" indicates that U polarization data is being loaded.
+
+Arguments:
+	None.
+
+Returned:
+	Nothing.
+
+Written by Nicholas Phillips.
+QT4 implementation.  Michael R. Greason, ADNET, 31 August 2007.
+------------------------------------------------------------------------------------ */
+void fileProgress::loadUPolarization (void)
+{
+	done();
+	curr = 3;
+	infoUPolar->setText(tr("Present"));
+	infoUPolarProg->setText(tr("Loading"));
+}
+/* ------------------------------------------------------------------------------------
+"loadPPolarization" indicates that P polarization data is being computed.
+
+Arguments:
+	None.
+
+Returned:
+	Nothing.
+
+Written by Nicholas Phillips.
+QT4 implementation.  Michael R. Greason, ADNET, 31 August 2007.
+------------------------------------------------------------------------------------ */
+void fileProgress::loadPPolarization (void)
+{
+	done();
+	curr = 4;
+	infoPPolarProg->setText(tr("Computing"));
+}
+/* ------------------------------------------------------------------------------------
+"loadNumObs" indicates that N Obs data is being loaded.
+
+Arguments:
+	None.
+
+Returned:
+	Nothing.
+
+Written by Nicholas Phillips.
+QT4 implementation.  Michael R. Greason, ADNET, 31 August 2007.
+------------------------------------------------------------------------------------ */
+void fileProgress::loadNumObs (void)
+{
+	done();
+	curr = 5;
+	infoNObs->setText(tr("Present"));
+	infoNObsProg->setText(tr("Loading"));
+}
+/* ------------------------------------------------------------------------------------
+"finished" is called to indicate that the loading of the file is done.
+
+Arguments:
+	map - The skymap to use as the source of statistical info.  If NULL, the default,
+	      then the general map statistical information isn't filled.
+
+Returned:
+	Nothing.
+
+Written by Nicholas Phillips.
+QT4 implementation.  Michael R. Greason, ADNET, 31 August 2007.
+------------------------------------------------------------------------------------ */
+void fileProgress::finished (Skymap *map)
+{
+	QString ld(tr("Loaded")), cp(tr("Computed")), np(tr("Not Present")), na(tr("N/A"));
+	done();
+
+	if (infoTempProg->text() != ld)
+	{
+		infoTemp->setText(np);
+		infoTempProg->setText(na);
+	}
+
+	if (infoQPolarProg->text() != ld)
+	{
+		infoQPolar->setText(np);
+		infoQPolarProg->setText(na);
+	}
+
+	if (infoUPolarProg->text() != ld)
+	{
+		infoUPolar->setText(np);
+		infoUPolarProg->setText(na);
+	}
+
+	if (infoPPolarProg->text() != cp)
+	{
+		infoPPolarProg->setText(na);
+	}
+
+	if (infoNObsProg->text() != ld)
+	{
+		infoNObs->setText(np);
+		infoNObsProg->setText(na);
+	}
+	if (map == NULL) return;
+	mapInfo(map);
+}
+/* ------------------------------------------------------------------------------------
+'resizeEvent' responds to a resize event, telling the text widgets to change
+size accordingly.
+
+Arguments:
+	event - The event to process.
+
+Returned:
+	Nothing.
+
+Written by Michael R. Greason, ADNET, 27 August 2007.
+------------------------------------------------------------------------------------ */
+void fileProgress::resizeEvent(QResizeEvent *event)
+{
+	QSize tmp, sz = event->size();
+	int wid = sz.width() - delwidth;
+	int hgt;
+/*
+			Adjust the size of the text widgets.
+
+				Overall information container.
+*/
+	hgt = sz.height() - delheightc;
+	tmp = pixelContainer->size();
+	tmp.setWidth(wid);
+	tmp.setHeight(hgt);
+	pixelContainer->resize(tmp);
+/*
+
+				Statistics table.
+*/
+	tmp = statisticsTable->size();
+	tmp.setWidth(wid);
+	statisticsTable->resize(tmp);
+/*
+
+				Pixel listing table.
+*/
+	hgt -= delheightt;
+	tmp = pixelTable->size();
+	tmp.setWidth(wid);
+	tmp.setHeight(hgt);
+	pixelTable->resize(tmp);
+/*
+
+				Pixel statistics table.
+*/
+	QPoint pt;
+	tmp = pixelStatistics->size();
+	tmp.setWidth(wid);
+	pixelStatistics->resize(tmp);
+	pt.setY(offheight + hgt);
+	pixelStatistics->move(pt);
+/*
+			Give the parent class its shot at the event.
+*/
+	QDialog::resizeEvent(event);
+}

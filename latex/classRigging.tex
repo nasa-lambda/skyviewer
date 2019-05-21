@@ -1,0 +1,103 @@
+\hypertarget{classRigging}{
+\section{Rigging Class Reference}
+\label{classRigging}\index{Rigging@{Rigging}}
+}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classRigging_a830185d89f3ef9fad8a79afdf4c11da9}{
+void {\bfseries draw} ()}
+\label{classRigging_a830185d89f3ef9fad8a79afdf4c11da9}
+
+\item 
+\hypertarget{classRigging_acd62a2783380efd3f4c33352894ad9eb}{
+void {\bfseries generate} (int ns, bool mp, double rad=1.)}
+\label{classRigging_acd62a2783380efd3f4c33352894ad9eb}
+
+\item 
+\hypertarget{classRigging_ae8b0193ba8009f7ff6ce9d4bd961fe08}{
+bool {\bfseries mollweide} (void) const }
+\label{classRigging_ae8b0193ba8009f7ff6ce9d4bd961fe08}
+
+\item 
+\hypertarget{classRigging_ade3adf8be73e6ca4f34e2837dc5a8275}{
+bool {\bfseries projectSelection} (const qglviewer::Vec \&o, const qglviewer::Vec \&d, qglviewer::Vec \&v) const }
+\label{classRigging_ade3adf8be73e6ca4f34e2837dc5a8275}
+
+\item 
+\hypertarget{classRigging_a18240637fc01ef8f905675b39854f6b3}{
+bool {\bfseries projectSelection} (const qglviewer::Vec \&o, const qglviewer::Vec \&d, double \&phi, double \&lambda) const }
+\label{classRigging_a18240637fc01ef8f905675b39854f6b3}
+
+\end{DoxyCompactItemize}
+\subsection*{Protected Types}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classRigging_a75cb1aed0e620d3f7dc79eccf0da1861}{
+typedef std::vector$<$ \hyperlink{classFace}{Face} $>$::iterator {\bfseries FI}}
+\label{classRigging_a75cb1aed0e620d3f7dc79eccf0da1861}
+
+\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classRigging_af6da354400ffa25565c49bed18a1afc2}{
+void {\bfseries drawFace} (const int face)}
+\label{classRigging_af6da354400ffa25565c49bed18a1afc2}
+
+\item 
+void \hyperlink{classRigging_aff45671b55d4d94d140935b8998236b7}{setThetas} ()
+\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classRigging_a983138c5234c78baf367263fbe6e5c6d}{
+bool {\bfseries viewmoll}}
+\label{classRigging_a983138c5234c78baf367263fbe6e5c6d}
+
+\item 
+\hypertarget{classRigging_a922366ad0a5e03f1452362a4c9fa2336}{
+int {\bfseries nside}}
+\label{classRigging_a922366ad0a5e03f1452362a4c9fa2336}
+
+\item 
+\hypertarget{classRigging_a9736dd6f4182015d5c3496088c5bd8df}{
+std::vector$<$ \hyperlink{classFace}{Face} $>$ {\bfseries faces}}
+\label{classRigging_a9736dd6f4182015d5c3496088c5bd8df}
+
+\item 
+\hypertarget{classRigging_a5eed9c32ef43d3364e95791c2ca70f37}{
+std::vector$<$ double $>$ \hyperlink{classRigging_a5eed9c32ef43d3364e95791c2ca70f37}{costhetas\_\-np}}
+\label{classRigging_a5eed9c32ef43d3364e95791c2ca70f37}
+
+\begin{DoxyCompactList}\small\item\em theta values for North Pole Faces \item\end{DoxyCompactList}\item 
+\hypertarget{classRigging_a5d3aaccdb4e5e1918a7cef7342f0c9bf}{
+std::vector$<$ double $>$ \hyperlink{classRigging_a5d3aaccdb4e5e1918a7cef7342f0c9bf}{costhetas\_\-eq}}
+\label{classRigging_a5d3aaccdb4e5e1918a7cef7342f0c9bf}
+
+\begin{DoxyCompactList}\small\item\em theta values for Equatorial Pole Faces \item\end{DoxyCompactList}\item 
+\hypertarget{classRigging_aa02a250484cfee4d2d0400ed61b8f9cf}{
+std::vector$<$ double $>$ \hyperlink{classRigging_aa02a250484cfee4d2d0400ed61b8f9cf}{costhetas\_\-sp}}
+\label{classRigging_aa02a250484cfee4d2d0400ed61b8f9cf}
+
+\begin{DoxyCompactList}\small\item\em theta values for South Pole Faces \item\end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classRigging_aff45671b55d4d94d140935b8998236b7}{
+\index{Rigging@{Rigging}!setThetas@{setThetas}}
+\index{setThetas@{setThetas}!Rigging@{Rigging}}
+\subsubsection[{setThetas}]{\setlength{\rightskip}{0pt plus 5cm}void Rigging::setThetas ()\hspace{0.3cm}{\ttfamily  \mbox{[}protected\mbox{]}}}}
+\label{classRigging_aff45671b55d4d94d140935b8998236b7}
+
+
+$<$ theta values for North Pole Faces
+
+$<$ theta values for Equatorial Pole Faces
+
+$<$ theta values for South Pole Faces 
+
+The documentation for this class was generated from the following files:\begin{DoxyCompactItemize}
+\item 
+rigging.h\item 
+rigging.cpp\end{DoxyCompactItemize}

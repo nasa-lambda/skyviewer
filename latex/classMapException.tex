@@ -1,0 +1,60 @@
+\hypertarget{classMapException}{
+\section{MapException Class Reference}
+\label{classMapException}\index{MapException@{MapException}}
+}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+enum {\bfseries ErrCode} \{ \par
+{\bfseries None}, 
+{\bfseries Memory}, 
+{\bfseries Bounds}, 
+{\bfseries Undefined}, 
+\par
+{\bfseries InvalidType}, 
+{\bfseries FITSError}, 
+{\bfseries Other}
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classMapException_a2856a80bedce7d662e5b04875d57a73d}{
+{\bfseries MapException} (ErrCode code, int status=0, const char $\ast$comm=0)}
+\label{classMapException_a2856a80bedce7d662e5b04875d57a73d}
+
+\item 
+\hypertarget{classMapException_a82fe912fe948ce506e6c12227f6a1f4c}{
+virtual const char $\ast$ {\bfseries Message} (void) const }
+\label{classMapException_a82fe912fe948ce506e6c12227f6a1f4c}
+
+\item 
+\hypertarget{classMapException_a25211383bb51b521440dd344046ff23a}{
+virtual const char $\ast$ {\bfseries Comment} (void) const }
+\label{classMapException_a25211383bb51b521440dd344046ff23a}
+
+\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classMapException_a94b5d4b4483f973cb345e14ddb9d9bdd}{
+ErrCode {\bfseries code\_\-}}
+\label{classMapException_a94b5d4b4483f973cb345e14ddb9d9bdd}
+
+\item 
+\hypertarget{classMapException_a3b84869995a4395ae05ee51892c4ce00}{
+int {\bfseries status\_\-}}
+\label{classMapException_a3b84869995a4395ae05ee51892c4ce00}
+
+\item 
+\hypertarget{classMapException_ae6b38ad1c1f2c29c374845bdf212dc15}{
+char $\ast$ {\bfseries comment\_\-}}
+\label{classMapException_ae6b38ad1c1f2c29c374845bdf212dc15}
+
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following files:\begin{DoxyCompactItemize}
+\item 
+map\_\-exception.h\item 
+map\_\-exception.cpp\end{DoxyCompactItemize}

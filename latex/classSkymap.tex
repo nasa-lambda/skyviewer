@@ -1,0 +1,385 @@
+\hypertarget{classSkymap}{
+\section{Skymap Class Reference}
+\label{classSkymap}\index{Skymap@{Skymap}}
+}
+Inheritance diagram for Skymap::\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2cm]{classSkymap}
+\end{center}
+\end{figure}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+enum {\bfseries Type} \{ \par
+{\bfseries none}, 
+{\bfseries TPix}, 
+{\bfseries PPix}, 
+{\bfseries TnobsPix}, 
+\par
+{\bfseries TPnobsPix}
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classSkymap_a98100b6b91c5e1f9a0be8bf943fe8767}{
+{\bfseries Skymap} (unsigned int n\_\-in, Type type\_\-in)}
+\label{classSkymap_a98100b6b91c5e1f9a0be8bf943fe8767}
+
+\item 
+\hypertarget{classSkymap_a6a7b2f8b245ea95159a58a48b3f837e2}{
+virtual void {\bfseries set} (unsigned int n\_\-in, Type type\_\-in)}
+\label{classSkymap_a6a7b2f8b245ea95159a58a48b3f837e2}
+
+\item 
+\hypertarget{classSkymap_a63032365298b6dc3fc88b787461513a1}{
+virtual void {\bfseries clear} ()}
+\label{classSkymap_a63032365298b6dc3fc88b787461513a1}
+
+\item 
+\hypertarget{classSkymap_a436cad4e936311ba3ef9d5a58428a252}{
+void {\bfseries copy} (\hyperlink{classSkymap}{Skymap} \&imap)}
+\label{classSkymap_a436cad4e936311ba3ef9d5a58428a252}
+
+\item 
+\hypertarget{classSkymap_a02e02c6987fd28bb0e8d23d3838dc89f}{
+unsigned int {\bfseries size} () const }
+\label{classSkymap_a02e02c6987fd28bb0e8d23d3838dc89f}
+
+\item 
+\hypertarget{classSkymap_ad2c03c69d9f19860860c619e248e8d26}{
+unsigned int {\bfseries n} () const }
+\label{classSkymap_ad2c03c69d9f19860860c619e248e8d26}
+
+\item 
+\hypertarget{classSkymap_aa8bcceaeb9523e0723435d53335e11c1}{
+Type {\bfseries type} () const }
+\label{classSkymap_aa8bcceaeb9523e0723435d53335e11c1}
+
+\item 
+\hypertarget{classSkymap_a418e539bf2aae7823ca5a774e84d9f35}{
+bool {\bfseries has\_\-Temperature} (void) const }
+\label{classSkymap_a418e539bf2aae7823ca5a774e84d9f35}
+
+\item 
+\hypertarget{classSkymap_a4be6a49da0b2a0259695a3020f6fe0ad}{
+bool {\bfseries has\_\-Polarization} (void) const }
+\label{classSkymap_a4be6a49da0b2a0259695a3020f6fe0ad}
+
+\item 
+\hypertarget{classSkymap_ab85671bb2ec3de6c1f8736f70d8d0cd4}{
+bool {\bfseries has\_\-Nobs} (void) const }
+\label{classSkymap_ab85671bb2ec3de6c1f8736f70d8d0cd4}
+
+\item 
+\hypertarget{classSkymap_a2c772a9e2fe17673884b9d1d17f753e2}{
+\hyperlink{classBasePixel}{BasePixel} \& {\bfseries operator\mbox{[}$\,$\mbox{]}} (unsigned int i)}
+\label{classSkymap_a2c772a9e2fe17673884b9d1d17f753e2}
+
+\item 
+\hypertarget{classSkymap_a2cead85b549a4f92287df56d40a984b4}{
+\hyperlink{classSkymap}{Skymap} \& {\bfseries operator=} (\hyperlink{classSkymap}{Skymap} \&imap)}
+\label{classSkymap_a2cead85b549a4f92287df56d40a984b4}
+
+\item 
+\hypertarget{classSkymap_aa369f2087f2154dae5139c15cc620c8e}{
+virtual void {\bfseries computePolar} (void)}
+\label{classSkymap_aa369f2087f2154dae5139c15cc620c8e}
+
+\item 
+\hypertarget{classSkymap_a8435d7021b9215ebe31c3f5236894af7}{
+virtual void {\bfseries calcStats} (void)}
+\label{classSkymap_a8435d7021b9215ebe31c3f5236894af7}
+
+\item 
+\hypertarget{classSkymap_ad6d01c87ccd1ff33f680dae9b38c9e66}{
+double {\bfseries getMeanT} () const }
+\label{classSkymap_ad6d01c87ccd1ff33f680dae9b38c9e66}
+
+\item 
+\hypertarget{classSkymap_a9aaf7a1cbb4e60d30ddb4ad2912daa3d}{
+double {\bfseries getStdDevT} () const }
+\label{classSkymap_a9aaf7a1cbb4e60d30ddb4ad2912daa3d}
+
+\item 
+\hypertarget{classSkymap_af9d22467da8c446691520cb26d90cbe0}{
+double {\bfseries getMinT} () const }
+\label{classSkymap_af9d22467da8c446691520cb26d90cbe0}
+
+\item 
+\hypertarget{classSkymap_a2c359b108a9aba30a8811a5b6a8d1015}{
+double {\bfseries getMaxT} () const }
+\label{classSkymap_a2c359b108a9aba30a8811a5b6a8d1015}
+
+\item 
+\hypertarget{classSkymap_ab88a0449b3f747addfd23b21efca0844}{
+double {\bfseries getMeanQ} () const }
+\label{classSkymap_ab88a0449b3f747addfd23b21efca0844}
+
+\item 
+\hypertarget{classSkymap_a902a8c9474388bbbfbea1d12a9c353ce}{
+double {\bfseries getStdDevQ} () const }
+\label{classSkymap_a902a8c9474388bbbfbea1d12a9c353ce}
+
+\item 
+\hypertarget{classSkymap_af980c82699488b98e3a825201bba6d02}{
+double {\bfseries getMinQ} () const }
+\label{classSkymap_af980c82699488b98e3a825201bba6d02}
+
+\item 
+\hypertarget{classSkymap_ad286b651c49d196b15fabcc1fbf5c7ff}{
+double {\bfseries getMaxQ} () const }
+\label{classSkymap_ad286b651c49d196b15fabcc1fbf5c7ff}
+
+\item 
+\hypertarget{classSkymap_a375563c7c12775b10f46f9af28cd4a7b}{
+double {\bfseries getMeanU} () const }
+\label{classSkymap_a375563c7c12775b10f46f9af28cd4a7b}
+
+\item 
+\hypertarget{classSkymap_a52eb1f4f7085b8923961de7159a0db62}{
+double {\bfseries getStdDevU} () const }
+\label{classSkymap_a52eb1f4f7085b8923961de7159a0db62}
+
+\item 
+\hypertarget{classSkymap_ac86c61c42c9d842172c4b412270a7dc4}{
+double {\bfseries getMinU} () const }
+\label{classSkymap_ac86c61c42c9d842172c4b412270a7dc4}
+
+\item 
+\hypertarget{classSkymap_ac3883edba03bebbed79c40610e99bffc}{
+double {\bfseries getMaxU} () const }
+\label{classSkymap_ac3883edba03bebbed79c40610e99bffc}
+
+\item 
+\hypertarget{classSkymap_a9ab28496f61ee7147dab8770a949d93e}{
+double {\bfseries getMeanNobs} () const }
+\label{classSkymap_a9ab28496f61ee7147dab8770a949d93e}
+
+\item 
+\hypertarget{classSkymap_a2d1141bf66fd2266b4e62c44baac6f1c}{
+double {\bfseries getStdDevNobs} () const }
+\label{classSkymap_a2d1141bf66fd2266b4e62c44baac6f1c}
+
+\item 
+\hypertarget{classSkymap_a6f6430b0751f8f68b21b6e32a5f53616}{
+double {\bfseries getMinNobs} () const }
+\label{classSkymap_a6f6430b0751f8f68b21b6e32a5f53616}
+
+\item 
+\hypertarget{classSkymap_a4d9b0a5a6b03470933e4ff873d45bcd1}{
+double {\bfseries getMaxNobs} () const }
+\label{classSkymap_a4d9b0a5a6b03470933e4ff873d45bcd1}
+
+\item 
+\hypertarget{classSkymap_a11d62449f638f47fa7d88bd6f16d5e7c}{
+double {\bfseries getMeanPmag} () const }
+\label{classSkymap_a11d62449f638f47fa7d88bd6f16d5e7c}
+
+\item 
+\hypertarget{classSkymap_a79644f4a8025d9e2659d08b564747717}{
+double {\bfseries getStdDevPmag} () const }
+\label{classSkymap_a79644f4a8025d9e2659d08b564747717}
+
+\item 
+\hypertarget{classSkymap_a66140391b09076ea5029d0ab985206c7}{
+double {\bfseries getMinPmag} () const }
+\label{classSkymap_a66140391b09076ea5029d0ab985206c7}
+
+\item 
+\hypertarget{classSkymap_a9798d14d1b3e9056c7a79c7361ae8f72}{
+double {\bfseries getMaxPmag} () const }
+\label{classSkymap_a9798d14d1b3e9056c7a79c7361ae8f72}
+
+\item 
+\hypertarget{classSkymap_aa4f1033d4204caa82195cc5600973a2b}{
+double {\bfseries getMeanPang} () const }
+\label{classSkymap_aa4f1033d4204caa82195cc5600973a2b}
+
+\item 
+\hypertarget{classSkymap_a4e62052eff47c061947ae98e30680fa8}{
+double {\bfseries getStdDevPang} () const }
+\label{classSkymap_a4e62052eff47c061947ae98e30680fa8}
+
+\item 
+\hypertarget{classSkymap_a0ffa1e7d8deba48394f84f7248aab499}{
+double {\bfseries getMinPang} () const }
+\label{classSkymap_a0ffa1e7d8deba48394f84f7248aab499}
+
+\item 
+\hypertarget{classSkymap_a3d73a0fdc9c456836ff366a793ad7db2}{
+double {\bfseries getMaxPang} () const }
+\label{classSkymap_a3d73a0fdc9c456836ff366a793ad7db2}
+
+\item 
+\hypertarget{classSkymap_a14b07cd8368a997158e7bc517d7455d9}{
+virtual void {\bfseries readFITS} (const char $\ast$filename, \hyperlink{classControlDialog}{ControlDialog} $\ast$progwin=NULL)}
+\label{classSkymap_a14b07cd8368a997158e7bc517d7455d9}
+
+\item 
+\hypertarget{classSkymap_a2a4fffdb8a3bdf77bdf9f5ece97737d7}{
+virtual void {\bfseries readFITS} (std::string filename, \hyperlink{classControlDialog}{ControlDialog} $\ast$progwin=NULL)}
+\label{classSkymap_a2a4fffdb8a3bdf77bdf9f5ece97737d7}
+
+\item 
+\hypertarget{classSkymap_af86ce09e87283c730ca9efe85354423f}{
+virtual void {\bfseries readFITS} (QString filename, \hyperlink{classControlDialog}{ControlDialog} $\ast$progwin=NULL)}
+\label{classSkymap_af86ce09e87283c730ca9efe85354423f}
+
+\item 
+\hypertarget{classSkymap_a154aae2d42dd033245e4d979171d3313}{
+virtual void {\bfseries writeFITS} (const char $\ast$filename, char $\ast$tabname=NULL)}
+\label{classSkymap_a154aae2d42dd033245e4d979171d3313}
+
+\item 
+\hypertarget{classSkymap_ab81c3181ba74f9f42ff6001c2bf073e3}{
+virtual void {\bfseries writeFITS} (std::string filename, char $\ast$tabname=NULL)}
+\label{classSkymap_ab81c3181ba74f9f42ff6001c2bf073e3}
+
+\item 
+\hypertarget{classSkymap_a63347708ce65ddf8679c28f137ed3171}{
+virtual void {\bfseries writeFITS} (QString filename, char $\ast$tabname=NULL)}
+\label{classSkymap_a63347708ce65ddf8679c28f137ed3171}
+
+\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classSkymap_a3f889eb836eb3b1ae2758d7692859f77}{
+virtual void {\bfseries init} ()}
+\label{classSkymap_a3f889eb836eb3b1ae2758d7692859f77}
+
+\item 
+\hypertarget{classSkymap_a4b53f27820d8298ddf6a8e331c37ee43}{
+virtual void {\bfseries allocPixMemory} (unsigned int n\_\-in, Type type\_\-in)}
+\label{classSkymap_a4b53f27820d8298ddf6a8e331c37ee43}
+
+\item 
+\hypertarget{classSkymap_a73f5439e0e214d0c18d1f28e089bfcf6}{
+virtual void {\bfseries freeMemory} ()}
+\label{classSkymap_a73f5439e0e214d0c18d1f28e089bfcf6}
+
+\item 
+\hypertarget{classSkymap_a6335881c7ddd4326d72391c507075dc6}{
+\hyperlink{classBasePixel}{BasePixel} \& {\bfseries returnnone} (unsigned int i)}
+\label{classSkymap_a6335881c7ddd4326d72391c507075dc6}
+
+\item 
+\hypertarget{classSkymap_a3d87a23a19b193ffd4489ab5795ae94d}{
+\hyperlink{classBasePixel}{BasePixel} \& {\bfseries returnTpix} (unsigned int i)}
+\label{classSkymap_a3d87a23a19b193ffd4489ab5795ae94d}
+
+\item 
+\hypertarget{classSkymap_a05cd60e4b26f3612c6c7779d583cc3ae}{
+\hyperlink{classBasePixel}{BasePixel} \& {\bfseries returnTPpix} (unsigned int i)}
+\label{classSkymap_a05cd60e4b26f3612c6c7779d583cc3ae}
+
+\item 
+\hypertarget{classSkymap_a3985e322e7ed7ca59abcc27408ed53dc}{
+\hyperlink{classBasePixel}{BasePixel} \& {\bfseries returnTnobspix} (unsigned int i)}
+\label{classSkymap_a3985e322e7ed7ca59abcc27408ed53dc}
+
+\item 
+\hypertarget{classSkymap_a612e851fca00454607e45395dfe64dfb}{
+\hyperlink{classBasePixel}{BasePixel} \& {\bfseries returnTPnobspix} (unsigned int i)}
+\label{classSkymap_a612e851fca00454607e45395dfe64dfb}
+
+\item 
+\hypertarget{classSkymap_a92bab429245859365bbebe26d41fbfbd}{
+void {\bfseries writeHdrDate} (fitsfile $\ast$fptr)}
+\label{classSkymap_a92bab429245859365bbebe26d41fbfbd}
+
+\item 
+\hypertarget{classSkymap_ae09507aea73a692ac2ae7e0c2953c11d}{
+virtual void {\bfseries readFITSPrimaryHeader} (fitsfile $\ast$fptr)}
+\label{classSkymap_ae09507aea73a692ac2ae7e0c2953c11d}
+
+\item 
+\hypertarget{classSkymap_a82c3a7bac1619379e295c641fb4e30f2}{
+virtual void {\bfseries writeFITSPrimaryHeader} (fitsfile $\ast$fptr)}
+\label{classSkymap_a82c3a7bac1619379e295c641fb4e30f2}
+
+\item 
+\hypertarget{classSkymap_a7f8d6b1d7e17dbf892f97a552eac75fb}{
+virtual void {\bfseries readFITSExtensionHeader} (fitsfile $\ast$fptr)}
+\label{classSkymap_a7f8d6b1d7e17dbf892f97a552eac75fb}
+
+\item 
+\hypertarget{classSkymap_ac65257c88656db95b7d811fc37bd50fd}{
+virtual void {\bfseries writeFITSExtensionHeader} (fitsfile $\ast$fptr)}
+\label{classSkymap_ac65257c88656db95b7d811fc37bd50fd}
+
+\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classSkymap_a43566ad46e5dd5397f61780e896fcd16}{
+Type {\bfseries type\_\-}}
+\label{classSkymap_a43566ad46e5dd5397f61780e896fcd16}
+
+\item 
+\hypertarget{classSkymap_af4d7d674710cda527164130e3d1641a8}{
+unsigned int {\bfseries n\_\-}}
+\label{classSkymap_af4d7d674710cda527164130e3d1641a8}
+
+\item 
+\hypertarget{classSkymap_ac58923522b9db226756edc6225761e0b}{
+\hyperlink{classTPixel}{TPixel} $\ast$ {\bfseries tpix}}
+\label{classSkymap_ac58923522b9db226756edc6225761e0b}
+
+\item 
+\hypertarget{classSkymap_a104ba481c08758174f27901a08763634}{
+\hyperlink{classTPPixel}{TPPixel} $\ast$ {\bfseries tppix}}
+\label{classSkymap_a104ba481c08758174f27901a08763634}
+
+\item 
+\hypertarget{classSkymap_a0943b70a355e1ebd43556dfd396fe300}{
+\hyperlink{classTnobsPixel}{TnobsPixel} $\ast$ {\bfseries tnobspix}}
+\label{classSkymap_a0943b70a355e1ebd43556dfd396fe300}
+
+\item 
+\hypertarget{classSkymap_af0bc0e0d3528395088768c98d80b97ca}{
+\hyperlink{classTPnobsPixel}{TPnobsPixel} $\ast$ {\bfseries tpnobspix}}
+\label{classSkymap_af0bc0e0d3528395088768c98d80b97ca}
+
+\item 
+\hypertarget{classSkymap_a246919d4e10056069969d33c1682245d}{
+\hyperlink{classTPnobsPixel}{TPnobsPixel} {\bfseries minpix}}
+\label{classSkymap_a246919d4e10056069969d33c1682245d}
+
+\item 
+\hypertarget{classSkymap_a9f0e24b96979ef86eed5e326d138cb86}{
+\hyperlink{classTPnobsPixel}{TPnobsPixel} {\bfseries maxpix}}
+\label{classSkymap_a9f0e24b96979ef86eed5e326d138cb86}
+
+\item 
+\hypertarget{classSkymap_a6ee3196efacdcdd2bb6c1f248015204a}{
+\hyperlink{classTPnobsPixel}{TPnobsPixel} {\bfseries avgpix}}
+\label{classSkymap_a6ee3196efacdcdd2bb6c1f248015204a}
+
+\item 
+\hypertarget{classSkymap_a8a50719463edc3fb679848eae1bc236a}{
+\hyperlink{classTPnobsPixel}{TPnobsPixel} {\bfseries stdpix}}
+\label{classSkymap_a8a50719463edc3fb679848eae1bc236a}
+
+\item 
+\hypertarget{classSkymap_ac91e7a47792a35e37398fdbbf61c292c}{
+\hyperlink{classBasePixel}{BasePixel} \&(Skymap::$\ast$ {\bfseries returnfct} )(unsigned int)}
+\label{classSkymap_ac91e7a47792a35e37398fdbbf61c292c}
+
+\end{DoxyCompactItemize}
+\subsection*{Static Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classSkymap_a7085d8df86f1e3938132360260c9f86b}{
+static \hyperlink{classBasePixel}{BasePixel} {\bfseries basedummy}}
+\label{classSkymap_a7085d8df86f1e3938132360260c9f86b}
+
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following files:\begin{DoxyCompactItemize}
+\item 
+skymap.h\item 
+skymap.cpp\end{DoxyCompactItemize}

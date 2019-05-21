@@ -1,0 +1,281 @@
+<ui version="4.0" >
+ <class>RangeControl</class>
+ <widget class="QWidget" name="RangeControl" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>402</width>
+    <height>417</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>Range Control</string>
+  </property>
+  <layout class="QVBoxLayout" >
+   <property name="margin" >
+    <number>9</number>
+   </property>
+   <property name="spacing" >
+    <number>6</number>
+   </property>
+   <item>
+    <widget class="HistogramWidget" native="1" name="histogramWidget" >
+     <property name="minimumSize" >
+      <size>
+       <width>384</width>
+       <height>338</height>
+      </size>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" >
+     <property name="margin" >
+      <number>0</number>
+     </property>
+     <property name="spacing" >
+      <number>6</number>
+     </property>
+     <item>
+      <layout class="QVBoxLayout" >
+       <property name="margin" >
+        <number>0</number>
+       </property>
+       <property name="spacing" >
+        <number>6</number>
+       </property>
+       <item>
+        <widget class="QLabel" name="projectionLabel" >
+         <property name="text" >
+          <string>Projection</string>
+         </property>
+         <property name="buddy" >
+          <cstring>projectionSelect</cstring>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="projectionSelect" >
+         <item>
+          <property name="text" >
+           <string>3D Sphere</string>
+          </property>
+          <property name="icon" >
+           <iconset>images/spherical.png</iconset>
+          </property>
+         </item>
+         <item>
+          <property name="text" >
+           <string>Mollweide</string>
+          </property>
+          <property name="icon" >
+           <iconset>images/mollweide.png</iconset>
+          </property>
+         </item>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" >
+       <property name="margin" >
+        <number>0</number>
+       </property>
+       <property name="spacing" >
+        <number>6</number>
+       </property>
+       <item>
+        <widget class="QLabel" name="fieldLabel" >
+         <property name="text" >
+          <string>Display Field</string>
+         </property>
+         <property name="buddy" >
+          <cstring>fieldSelect</cstring>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="fieldSelect" >
+         <item>
+          <property name="text" >
+           <string>Temperature</string>
+          </property>
+         </item>
+         <item>
+          <property name="text" >
+           <string>Q Polarization</string>
+          </property>
+         </item>
+         <item>
+          <property name="text" >
+           <string>U Polarization</string>
+          </property>
+         </item>
+         <item>
+          <property name="text" >
+           <string>P Polarization</string>
+          </property>
+         </item>
+         <item>
+          <property name="text" >
+           <string>Num Obs</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" >
+       <property name="margin" >
+        <number>0</number>
+       </property>
+       <property name="spacing" >
+        <number>6</number>
+       </property>
+       <item>
+        <widget class="QLabel" name="riggingLabel" >
+         <property name="text" >
+          <string>Rigging</string>
+         </property>
+         <property name="buddy" >
+          <cstring>riggingSelect</cstring>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="riggingSelect" >
+         <property name="layoutDirection" >
+          <enum>Qt::LeftToRight</enum>
+         </property>
+         <property name="currentIndex" >
+          <number>2</number>
+         </property>
+         <item>
+          <property name="text" >
+           <string>4</string>
+          </property>
+         </item>
+         <item>
+          <property name="text" >
+           <string>8</string>
+          </property>
+         </item>
+         <item>
+          <property name="text" >
+           <string>16</string>
+          </property>
+         </item>
+         <item>
+          <property name="text" >
+           <string>32</string>
+          </property>
+         </item>
+         <item>
+          <property name="text" >
+           <string>64</string>
+          </property>
+         </item>
+         <item>
+          <property name="text" >
+           <string>128</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" >
+       <property name="margin" >
+        <number>0</number>
+       </property>
+       <property name="spacing" >
+        <number>6</number>
+       </property>
+       <item>
+        <widget class="QLabel" name="colorLabel" >
+         <property name="text" >
+          <string>Color Map</string>
+         </property>
+         <property name="buddy" >
+          <cstring>colorSelect</cstring>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="colorSelect" >
+         <item>
+          <property name="text" >
+           <string>Default</string>
+          </property>
+         </item>
+         <item>
+          <property name="text" >
+           <string>Black/White</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" >
+     <property name="margin" >
+      <number>0</number>
+     </property>
+     <property name="spacing" >
+      <number>6</number>
+     </property>
+     <item>
+      <spacer>
+       <property name="orientation" >
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" >
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="polarVectorBox" >
+       <property name="text" >
+        <string>Show Polarization Vectors</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <spacer>
+     <property name="orientation" >
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" >
+      <size>
+       <width>384</width>
+       <height>91</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>HistogramWidget</class>
+   <extends>QWidget</extends>
+   <header>histogramwidget.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="skyviewer.qrc" />
+ </resources>
+ <connections/>
+</ui>

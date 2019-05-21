@@ -1,0 +1,201 @@
+\hypertarget{classHealpixMap}{
+\section{HealpixMap Class Reference}
+\label{classHealpixMap}\index{HealpixMap@{HealpixMap}}
+}
+Inheritance diagram for HealpixMap::\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2cm]{classHealpixMap}
+\end{center}
+\end{figure}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+enum {\bfseries PixOrder} \{ {\bfseries Undefined}, 
+{\bfseries Nested}, 
+{\bfseries Ring}
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classHealpixMap_ac02ca9e36dbca7ac8edcc7cb2e85449e}{
+{\bfseries HealpixMap} (unsigned int n\_\-in, Type type\_\-in, PixOrder ord=Undefined)}
+\label{classHealpixMap_ac02ca9e36dbca7ac8edcc7cb2e85449e}
+
+\item 
+\hypertarget{classHealpixMap_a3f393b2626568037439d544704ce082e}{
+void {\bfseries copy} (\hyperlink{classHealpixMap}{HealpixMap} \&imap)}
+\label{classHealpixMap_a3f393b2626568037439d544704ce082e}
+
+\item 
+\hypertarget{classHealpixMap_ade490533245ce6221c376528ec573d7f}{
+unsigned int {\bfseries nside} () const }
+\label{classHealpixMap_ade490533245ce6221c376528ec573d7f}
+
+\item 
+\hypertarget{classHealpixMap_acff1b0924e36b578b9a33883e7dfea07}{
+PixOrder {\bfseries pixordenum} () const }
+\label{classHealpixMap_acff1b0924e36b578b9a33883e7dfea07}
+
+\item 
+\hypertarget{classHealpixMap_a6782e5bafeda70fc53a38f47b6997712}{
+unsigned int {\bfseries pixorder} () const }
+\label{classHealpixMap_a6782e5bafeda70fc53a38f47b6997712}
+
+\item 
+\hypertarget{classHealpixMap_a568fbf2b754dec46b4a8434601ae1c52}{
+const char $\ast$ {\bfseries ordering} () const }
+\label{classHealpixMap_a568fbf2b754dec46b4a8434601ae1c52}
+
+\item 
+\hypertarget{classHealpixMap_acdbb1fd498df2d1b0d93d141523a6103}{
+void {\bfseries pixel2vector} (long pix, double $\ast$vector)}
+\label{classHealpixMap_acdbb1fd498df2d1b0d93d141523a6103}
+
+\item 
+\hypertarget{classHealpixMap_a17db376e6032b0d8f7156f6d0bf434f5}{
+void {\bfseries vector2pixel} (double $\ast$vector, long \&pix)}
+\label{classHealpixMap_a17db376e6032b0d8f7156f6d0bf434f5}
+
+\item 
+\hypertarget{classHealpixMap_a29dd2f8031c4d21b406fd4b835500d8e}{
+void {\bfseries pixel2angles} (long pix, double \&theta, double \&phi, int deg=0)}
+\label{classHealpixMap_a29dd2f8031c4d21b406fd4b835500d8e}
+
+\item 
+\hypertarget{classHealpixMap_a05937e2850bf0e1f5ebcae8f06e030b1}{
+void {\bfseries angles2pixel} (double theta, double phi, long \&pix, int deg=0)}
+\label{classHealpixMap_a05937e2850bf0e1f5ebcae8f06e030b1}
+
+\item 
+\hypertarget{classHealpixMap_ad3d8ca940adb51639008be0ee60927f3}{
+long {\bfseries pix2ordering} (long ipix, PixOrder dord)}
+\label{classHealpixMap_ad3d8ca940adb51639008be0ee60927f3}
+
+\item 
+\hypertarget{classHealpixMap_a366afcaa0a444a5da7337a9a20d2be30}{
+void {\bfseries resize} (unsigned int ns)}
+\label{classHealpixMap_a366afcaa0a444a5da7337a9a20d2be30}
+
+\item 
+\hypertarget{classHealpixMap_aaddb41d60fe4693d73ed43a1bf243fdd}{
+\hyperlink{classHealpixMap}{HealpixMap} \& {\bfseries operator=} (\hyperlink{classHealpixMap}{HealpixMap} \&imap)}
+\label{classHealpixMap_aaddb41d60fe4693d73ed43a1bf243fdd}
+
+\item 
+\hypertarget{classHealpixMap_ac18af0fdc4bd29adf136579a9947be43}{
+\hyperlink{classBasePixel}{BasePixel} \& {\bfseries getPixel} (double theta, double phi, int deg=0)}
+\label{classHealpixMap_ac18af0fdc4bd29adf136579a9947be43}
+
+\item 
+\hypertarget{classHealpixMap_a274f074eb89a21b0824c18dfa6a1b7cc}{
+\hyperlink{classBasePixel}{BasePixel} \& {\bfseries getPixel} (double $\ast$vector)}
+\label{classHealpixMap_a274f074eb89a21b0824c18dfa6a1b7cc}
+
+\item 
+\hypertarget{classHealpixMap_a05bc5b9ac59844536a1aa93cac52255f}{
+virtual void {\bfseries readFITS} (const char $\ast$filename, \hyperlink{classControlDialog}{ControlDialog} $\ast$progwin=NULL)}
+\label{classHealpixMap_a05bc5b9ac59844536a1aa93cac52255f}
+
+\item 
+\hypertarget{classHealpixMap_a31237a39a541e505a7687f6c586f21f8}{
+virtual void {\bfseries readFITS} (std::string filename, \hyperlink{classControlDialog}{ControlDialog} $\ast$progwin=NULL)}
+\label{classHealpixMap_a31237a39a541e505a7687f6c586f21f8}
+
+\item 
+\hypertarget{classHealpixMap_ae0f5359801064a050b4d81ae6ff87a5f}{
+virtual void {\bfseries readFITS} (QString filename, \hyperlink{classControlDialog}{ControlDialog} $\ast$progwin=NULL)}
+\label{classHealpixMap_ae0f5359801064a050b4d81ae6ff87a5f}
+
+\end{DoxyCompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classHealpixMap_a2346da1dc0fb99219cc01c13ecf0de57}{
+static unsigned int {\bfseries NSide2NPix} (unsigned int ns)}
+\label{classHealpixMap_a2346da1dc0fb99219cc01c13ecf0de57}
+
+\item 
+\hypertarget{classHealpixMap_a55f6da3fd679e30795e35c4bbcfebf2b}{
+static unsigned int {\bfseries NPix2NSide} (unsigned int np)}
+\label{classHealpixMap_a55f6da3fd679e30795e35c4bbcfebf2b}
+
+\item 
+\hypertarget{classHealpixMap_ae2b34ffae32ce2908ca0e275a5a7643d}{
+static unsigned int {\bfseries Res2NSide} (unsigned int res)}
+\label{classHealpixMap_ae2b34ffae32ce2908ca0e275a5a7643d}
+
+\item 
+\hypertarget{classHealpixMap_ac62c8c676ef547ce71a9e6f3ebb6656a}{
+static unsigned int {\bfseries Res2NPix} (unsigned int res)}
+\label{classHealpixMap_ac62c8c676ef547ce71a9e6f3ebb6656a}
+
+\item 
+\hypertarget{classHealpixMap_a18f012e362dbe9f95f6b63801d1b419d}{
+static unsigned int {\bfseries NSide2Res} (unsigned int ns)}
+\label{classHealpixMap_a18f012e362dbe9f95f6b63801d1b419d}
+
+\item 
+\hypertarget{classHealpixMap_a4b06594a76bef6c10c521f33df55bd0f}{
+static unsigned int {\bfseries NPix2Res} (unsigned int np)}
+\label{classHealpixMap_a4b06594a76bef6c10c521f33df55bd0f}
+
+\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classHealpixMap_aaa5d48e02428e6bf8c19b66443cf7551}{
+virtual void {\bfseries readFITSPrimaryHeader} (fitsfile $\ast$fptr)}
+\label{classHealpixMap_aaa5d48e02428e6bf8c19b66443cf7551}
+
+\item 
+\hypertarget{classHealpixMap_a8f6f6700ffd64451f24ddb79eb3100c7}{
+virtual void {\bfseries writeFITSPrimaryHeader} (fitsfile $\ast$fptr)}
+\label{classHealpixMap_a8f6f6700ffd64451f24ddb79eb3100c7}
+
+\item 
+\hypertarget{classHealpixMap_a1de90338e2b7f8e708703c7842ad9859}{
+virtual void {\bfseries readFITSExtensionHeader} (fitsfile $\ast$fptr)}
+\label{classHealpixMap_a1de90338e2b7f8e708703c7842ad9859}
+
+\item 
+\hypertarget{classHealpixMap_a22807323fccde4ac8795c37b3b05aedc}{
+virtual void {\bfseries writeFITSExtensionHeader} (fitsfile $\ast$fptr)}
+\label{classHealpixMap_a22807323fccde4ac8795c37b3b05aedc}
+
+\item 
+\hypertarget{classHealpixMap_af5e00392cd0a00f6430fcd3a512a9d6a}{
+unsigned int {\bfseries degrade\_\-pixindex} (unsigned int i, unsigned int nsi, unsigned int nso)}
+\label{classHealpixMap_af5e00392cd0a00f6430fcd3a512a9d6a}
+
+\item 
+\hypertarget{classHealpixMap_a98bf124c25890d74ad4b5bd57732d9ce}{
+void {\bfseries degrade\_\-map} (unsigned int ns)}
+\label{classHealpixMap_a98bf124c25890d74ad4b5bd57732d9ce}
+
+\item 
+\hypertarget{classHealpixMap_abe1eb636e3060261442456f9c30cd741}{
+void {\bfseries upgrade\_\-map} (unsigned int ns)}
+\label{classHealpixMap_abe1eb636e3060261442456f9c30cd741}
+
+\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classHealpixMap_a3850f4fc8beb20eb7a9dcfb582950f3b}{
+PixOrder {\bfseries ordering\_\-}}
+\label{classHealpixMap_a3850f4fc8beb20eb7a9dcfb582950f3b}
+
+\item 
+\hypertarget{classHealpixMap_a59ae2cba27ba837beaa7efa22270403f}{
+unsigned int {\bfseries nside\_\-}}
+\label{classHealpixMap_a59ae2cba27ba837beaa7efa22270403f}
+
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following files:\begin{DoxyCompactItemize}
+\item 
+healpixmap.h\item 
+healpixmap.cpp\end{DoxyCompactItemize}

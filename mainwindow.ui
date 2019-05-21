@@ -1,0 +1,339 @@
+<ui version="4.0" >
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>602</width>
+    <height>660</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget" >
+   <property name="sizePolicy" >
+    <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+  </widget>
+  <widget class="QToolBar" name="toolBar" >
+   <property name="orientation" >
+    <enum>Qt::Horizontal</enum>
+   </property>
+   <attribute name="toolBarArea" >
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak" >
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionOpen" />
+   <addaction name="actionReload" />
+   <addaction name="actionNew" />
+   <addaction name="actionSnapshot" />
+   <addaction name="separator" />
+   <addaction name="action3D_Sphere_tb" />
+   <addaction name="actionMollweide_tb" />
+   <addaction name="actionPolarAnglesTB" />
+   <addaction name="separator" />
+   <addaction name="actionHelp" />
+   <addaction name="separator" />
+   <addaction name="actionClose" />
+   <addaction name="actionExit" />
+  </widget>
+  <widget class="QStatusBar" name="viewerStatus" />
+  <widget class="QMenuBar" name="menuBar" >
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>602</width>
+     <height>29</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuHelp_2" >
+    <property name="title" >
+     <string>Help</string>
+    </property>
+    <addaction name="actionHelp" />
+   </widget>
+   <widget class="QMenu" name="menuMap" >
+    <property name="title" >
+     <string>Map</string>
+    </property>
+    <addaction name="actionTemperature" />
+    <addaction name="actionQ_Polarization" />
+    <addaction name="actionU_Polarization" />
+    <addaction name="actionP_Polarization" />
+    <addaction name="actionNum_Obs" />
+    <addaction name="separator" />
+    <addaction name="actionShow_Range_Box_m" />
+    <addaction name="actionPolarAnglesM" />
+   </widget>
+   <widget class="QMenu" name="menuProjection" >
+    <property name="title" >
+     <string>Projection</string>
+    </property>
+    <addaction name="action3D_Sphere_m" />
+    <addaction name="actionMollweide_m" />
+   </widget>
+   <widget class="QMenu" name="menuFile" >
+    <property name="title" >
+     <string>File</string>
+    </property>
+    <addaction name="actionNew" />
+    <addaction name="actionReload" />
+    <addaction name="separator" />
+    <addaction name="actionFileInfoM" />
+    <addaction name="actionSnapshot" />
+    <addaction name="separator" />
+    <addaction name="actionClose" />
+    <addaction name="actionExit" />
+   </widget>
+   <addaction name="menuFile" />
+   <addaction name="menuProjection" />
+   <addaction name="menuMap" />
+   <addaction name="menuHelp_2" />
+  </widget>
+  <action name="actionNew" >
+   <property name="icon" >
+    <iconset resource="skyviewer.qrc" >
+     <normaloff>:/images/new.png</normaloff>:/images/new.png</iconset>
+   </property>
+   <property name="text" >
+    <string>&amp;New</string>
+   </property>
+  </action>
+  <action name="actionReload" >
+   <property name="icon" >
+    <iconset resource="skyviewer.qrc" >
+     <normaloff>:/images/reload.png</normaloff>:/images/reload.png</iconset>
+   </property>
+   <property name="text" >
+    <string>&amp;Reload</string>
+   </property>
+  </action>
+  <action name="actionSnapshot" >
+   <property name="icon" >
+    <iconset resource="skyviewer.qrc" >
+     <normaloff>:/images/snapshot.png</normaloff>:/images/snapshot.png</iconset>
+   </property>
+   <property name="text" >
+    <string>&amp;Snapshot</string>
+   </property>
+   <property name="iconText" >
+    <string>Snapshot</string>
+   </property>
+   <property name="toolTip" >
+    <string>Snapshot</string>
+   </property>
+  </action>
+  <action name="actionHelp" >
+   <property name="icon" >
+    <iconset resource="skyviewer.qrc" >
+     <normaloff>:/images/help.png</normaloff>:/images/help.png</iconset>
+   </property>
+   <property name="text" >
+    <string>&amp;Help</string>
+   </property>
+  </action>
+  <action name="actionClose" >
+   <property name="icon" >
+    <iconset resource="skyviewer.qrc" >
+     <normaloff>:/images/close.png</normaloff>:/images/close.png</iconset>
+   </property>
+   <property name="text" >
+    <string>&amp;Close</string>
+   </property>
+  </action>
+  <action name="actionExit" >
+   <property name="icon" >
+    <iconset resource="skyviewer.qrc" >
+     <normaloff>:/images/quit.png</normaloff>:/images/quit.png</iconset>
+   </property>
+   <property name="text" >
+    <string>E&amp;xit</string>
+   </property>
+  </action>
+  <action name="action3D_Sphere_tb" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="checked" >
+    <bool>true</bool>
+   </property>
+   <property name="icon" >
+    <iconset resource="skyviewer.qrc" >
+     <normaloff>:/images/spherical.png</normaloff>:/images/spherical.png</iconset>
+   </property>
+   <property name="text" >
+    <string>&amp;3D Sphere</string>
+   </property>
+  </action>
+  <action name="actionMollweide_tb" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="icon" >
+    <iconset resource="skyviewer.qrc" >
+     <normaloff>:/images/mollweide.png</normaloff>:/images/mollweide.png</iconset>
+   </property>
+   <property name="text" >
+    <string>&amp;Mollweide</string>
+   </property>
+  </action>
+  <action name="actionTemperature" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="checked" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>&amp;Temperature</string>
+   </property>
+  </action>
+  <action name="actionQ_Polarization" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>&amp;Q Polarization</string>
+   </property>
+  </action>
+  <action name="actionU_Polarization" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>&amp;U Polarization</string>
+   </property>
+  </action>
+  <action name="actionP_Polarization" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>&amp;P Polarization</string>
+   </property>
+  </action>
+  <action name="actionNum_Obs" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>Num &amp;Obs</string>
+   </property>
+  </action>
+  <action name="actionMollweide_m" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>&amp;Mollweide</string>
+   </property>
+   <property name="iconText" >
+    <string>Mollweide</string>
+   </property>
+   <property name="toolTip" >
+    <string>Mollweide</string>
+   </property>
+  </action>
+  <action name="action3D_Sphere_m" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>&amp;3D Sphere</string>
+   </property>
+   <property name="iconText" >
+    <string>3D Sphere</string>
+   </property>
+   <property name="toolTip" >
+    <string>3D Sphere</string>
+   </property>
+  </action>
+  <action name="actionShow_Range_Box_m" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="checked" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>Show Range &amp;Box</string>
+   </property>
+   <property name="iconText" >
+    <string>Show Range Box</string>
+   </property>
+   <property name="toolTip" >
+    <string>Show Range Box</string>
+   </property>
+  </action>
+  <action name="actionPolarAnglesM" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>Show Polarization &amp;Vectors</string>
+   </property>
+   <property name="iconText" >
+    <string>Show Polarization Vectors</string>
+   </property>
+   <property name="toolTip" >
+    <string>Show Polarization Vectors</string>
+   </property>
+  </action>
+  <action name="actionPolarAnglesTB" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="icon" >
+    <iconset resource="skyviewer.qrc" >
+     <normaloff>:/images/polarization.png</normaloff>:/images/polarization.png</iconset>
+   </property>
+   <property name="text" >
+    <string>Show Polarization &amp;Vectors</string>
+   </property>
+   <property name="iconText" >
+    <string>Show Polarization Vectors</string>
+   </property>
+   <property name="toolTip" >
+    <string>Show Polarization Vectors</string>
+   </property>
+  </action>
+  <action name="actionFileInfoM" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="checked" >
+    <bool>false</bool>
+   </property>
+   <property name="text" >
+    <string>File Information</string>
+   </property>
+   <property name="iconText" >
+    <string>File Information</string>
+   </property>
+   <property name="toolTip" >
+    <string>File Information</string>
+   </property>
+  </action>
+  <action name="actionOpen" >
+   <property name="icon" >
+    <iconset resource="skyviewer.qrc" >
+     <normaloff>:/images/open.png</normaloff>:/images/open.png</iconset>
+   </property>
+   <property name="text" >
+    <string>Open</string>
+   </property>
+  </action>
+ </widget>
+ <resources>
+  <include location="skyviewer.qrc" />
+ </resources>
+ <connections/>
+</ui>

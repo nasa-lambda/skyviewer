@@ -1,0 +1,144 @@
+\hypertarget{classSkyViewer}{
+\section{SkyViewer Class Reference}
+\label{classSkyViewer}\index{SkyViewer@{SkyViewer}}
+}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classSkyViewer_ae460c1b2f45369e8dd7fe0dcdd1cbaf0}{
+{\bfseries SkyViewer} (QWidget $\ast$parent, \hyperlink{classmainWindow}{mainWindow} $\ast$mw)}
+\label{classSkyViewer_ae460c1b2f45369e8dd7fe0dcdd1cbaf0}
+
+\item 
+\hypertarget{classSkyViewer_acbb349d30b42b0fb205e4e978c184f55}{
+void {\bfseries setTexture} (\hyperlink{classSkyTexture}{SkyTexture} $\ast$t)}
+\label{classSkyViewer_acbb349d30b42b0fb205e4e978c184f55}
+
+\item 
+\hypertarget{classSkyViewer_aee27d4ff90f31432246ddc69cfcc7e5c}{
+void {\bfseries setRigging} (\hyperlink{classRigging}{Rigging} $\ast$r)}
+\label{classSkyViewer_aee27d4ff90f31432246ddc69cfcc7e5c}
+
+\item 
+\hypertarget{classSkyViewer_a07d2a0244841d5462e19d20a7a213e5b}{
+void {\bfseries setWhiteRigging} (\hyperlink{classRigging}{Rigging} $\ast$r)}
+\label{classSkyViewer_a07d2a0244841d5462e19d20a7a213e5b}
+
+\item 
+\hypertarget{classSkyViewer_a7f86089833060da2a55bf04294344a16}{
+void {\bfseries setPolarAngles} (\hyperlink{classPolarArgLineSet}{PolarArgLineSet} $\ast$p)}
+\label{classSkyViewer_a7f86089833060da2a55bf04294344a16}
+
+\item 
+\hypertarget{classSkyViewer_affb1d3e5c3b58758d69be54ef5e9ac75}{
+void {\bfseries constrainMollweide} (bool b)}
+\label{classSkyViewer_affb1d3e5c3b58758d69be54ef5e9ac75}
+
+\item 
+\hypertarget{classSkyViewer_a2141c313ebfad3b82325e6724f00eb94}{
+void {\bfseries recenterAt} (const double theta, const double phi)}
+\label{classSkyViewer_a2141c313ebfad3b82325e6724f00eb94}
+
+\item 
+\hypertarget{classSkyViewer_aefde4ebbf7c9e5059d52244b1ff03880}{
+void {\bfseries recenterAt} (const double x, const double y, const double z)}
+\label{classSkyViewer_aefde4ebbf7c9e5059d52244b1ff03880}
+
+\item 
+\hypertarget{classSkyViewer_a0993c050864033a28b88969d3e704558}{
+virtual QString {\bfseries helpString} () const }
+\label{classSkyViewer_a0993c050864033a28b88969d3e704558}
+
+\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classSkyViewer_aaebe284253097cb2215c0d1e28ec2e14}{
+virtual void {\bfseries init} (void)}
+\label{classSkyViewer_aaebe284253097cb2215c0d1e28ec2e14}
+
+\item 
+\hypertarget{classSkyViewer_ab38b06e689334938ab8c266dc143ecfb}{
+virtual void {\bfseries draw} (void)}
+\label{classSkyViewer_ab38b06e689334938ab8c266dc143ecfb}
+
+\item 
+\hypertarget{classSkyViewer_a3cf9922b19ce277971939df8c766ba34}{
+virtual void {\bfseries animate} (void)}
+\label{classSkyViewer_a3cf9922b19ce277971939df8c766ba34}
+
+\item 
+\hypertarget{classSkyViewer_adcfa638eb0fb234dc8f7d5bbae6fd6d8}{
+virtual void {\bfseries postSelection} (const QPoint \&pt)}
+\label{classSkyViewer_adcfa638eb0fb234dc8f7d5bbae6fd6d8}
+
+\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classSkyViewer_ac34d79fe218fdd4be6e918567daed4d0}{
+qglviewer::CameraConstraint $\ast$ {\bfseries constraint}}
+\label{classSkyViewer_ac34d79fe218fdd4be6e918567daed4d0}
+
+\item 
+\hypertarget{classSkyViewer_a76a8b79228d7ba4e91b274e480d09e0a}{
+\hyperlink{classmainWindow}{mainWindow} $\ast$ {\bfseries mwin}}
+\label{classSkyViewer_a76a8b79228d7ba4e91b274e480d09e0a}
+
+\item 
+\hypertarget{classSkyViewer_ad30399dfffd037f6f0d3bbe42f36b19b}{
+float {\bfseries hlite}}
+\label{classSkyViewer_ad30399dfffd037f6f0d3bbe42f36b19b}
+
+\item 
+\hypertarget{classSkyViewer_a553240c67764d6cfc2db4028e05f780e}{
+float {\bfseries delhlite}}
+\label{classSkyViewer_a553240c67764d6cfc2db4028e05f780e}
+
+\item 
+\hypertarget{classSkyViewer_add0e4f6148e1f2929c6ac02eb93d2b0c}{
+\hyperlink{classSkyTexture}{SkyTexture} $\ast$ {\bfseries texture}}
+\label{classSkyViewer_add0e4f6148e1f2929c6ac02eb93d2b0c}
+
+\item 
+\hypertarget{classSkyViewer_a9b7d9c891bf943d7a3d3e24d2b6169e0}{
+\hyperlink{classRigging}{Rigging} $\ast$ {\bfseries rigging}}
+\label{classSkyViewer_a9b7d9c891bf943d7a3d3e24d2b6169e0}
+
+\item 
+\hypertarget{classSkyViewer_aaa8eb90b08681ea55299aa59cd4e6ba0}{
+\hyperlink{classRigging}{Rigging} $\ast$ {\bfseries whiterig}}
+\label{classSkyViewer_aaa8eb90b08681ea55299aa59cd4e6ba0}
+
+\item 
+\hypertarget{classSkyViewer_ac8860569b6ec402919703873f9b5b082}{
+\hyperlink{classPolarArgLineSet}{PolarArgLineSet} $\ast$ {\bfseries polar}}
+\label{classSkyViewer_ac8860569b6ec402919703873f9b5b082}
+
+\item 
+\hypertarget{classSkyViewer_a785da7257ffbe4fd82ed70aa77b77f88}{
+QColor {\bfseries whitecolor}}
+\label{classSkyViewer_a785da7257ffbe4fd82ed70aa77b77f88}
+
+\item 
+\hypertarget{classSkyViewer_a55bd9e53a0f33e272c8fd9a37c272c6b}{
+QColor {\bfseries blackcolor}}
+\label{classSkyViewer_a55bd9e53a0f33e272c8fd9a37c272c6b}
+
+\item 
+\hypertarget{classSkyViewer_aca90f5fff74814a72776a0294ef78f38}{
+bool {\bfseries pulseflg}}
+\label{classSkyViewer_aca90f5fff74814a72776a0294ef78f38}
+
+\item 
+\hypertarget{classSkyViewer_ac97a5c1f3e73422ed28e8e3b21edb281}{
+bool {\bfseries mollview}}
+\label{classSkyViewer_ac97a5c1f3e73422ed28e8e3b21edb281}
+
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following files:\begin{DoxyCompactItemize}
+\item 
+skyviewer.h\item 
+skyviewer.cpp\end{DoxyCompactItemize}
