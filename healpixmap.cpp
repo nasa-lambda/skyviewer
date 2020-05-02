@@ -10,7 +10,6 @@ Written by Michael R. Greason, ADNET, 29 December 2006.
 			the Gnu C++ compiler wouldn't link these functions in correctly
 			without it.
 */
-#include <iostream>
 #include <string.h>
 #include <stdio.h>
 extern "C"

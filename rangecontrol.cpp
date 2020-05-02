@@ -6,7 +6,6 @@ Written by Michael R. Greason, ADNET, 23 August 2007.
 /*
 			Fetch header files.
 */
-#include <iostream>
 #include "rangecontrol.h"
 #include "healpixmap.h"
 

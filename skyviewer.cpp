@@ -4,7 +4,6 @@
 /*
 			Fetch header files.
 */
-#include <iostream>
 #include <QFile>
 #include <QTextStream>
 #include "skyviewer.h"
@@ -324,31 +323,15 @@ Written by Nicholas Phillips, 10/14/08
 ---------------------------------------------------------------------------- */
 void SkyViewer::recenterAt(const double x_, const double y_, const double z_)
 {
-	cout << "SkyViewer::recenterAt" << endl;
-
-	cout << "pos:  " << camera()->position();
-	cout << "\tlookat:  " << camera()->viewDirection();
-	cout << "\tup:  " << camera()->upVector() << endl;
-
-	Vec p(x_,y_,z_);
+    Vec p(x_,y_,z_);
 	Vec z(0,0,1);
 	Vec d = z-(p*z)*p;
 
-
-	cout << "new pos: " << p;
 	p *= camera()->position().norm();
-	cout << " -> " << p << endl;
 
 	camera()->setPosition( p );
 	camera()->setViewDirection(-p);
 	camera()->setUpVector( d );
-	
-	cout << "pos:  " << camera()->position();
-	cout << "\tlookat:  " << camera()->viewDirection();
-	cout << "\tup:  " << camera()->upVector() << endl;
-
-	cout << "d: " << d << ", d.p: "<< d*p << ",  d.z:  " << d*z << endl;
-	cout << endl;
 
 	return;
 }
@@ -378,7 +361,6 @@ void SkyViewer::recenterAt(const double theta, const double phi)
 		::toMollweide(phi,theta,x,y);
 		x /= sqrt(2.0);
 		y /= sqrt(2.0);
-		cout << camera()->position() << "\t" << x << ", "<< y <<endl;
 		pos = Vec(camera()->position()[0],x,y);
 		view = Vec(-1,0,0);
 		up = Vec(0,0,1);

@@ -9,7 +9,6 @@
 // Copyright: See COPYING file that comes with this distribution
 //
 //
-#include <iostream>
 #include <QTimer>
 #include "histogramwidget.h"
 #include "healpixmap.h"

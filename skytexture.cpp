@@ -8,7 +8,7 @@ QT4 implementation.  Michael R. Greason, ADNET, 29 December 2006.
 /*
 			Fetch header files.
 */
-#include <iostream>
+
 #include "skytexture.h"
 #include "rangecontrol.h"
 #include "heal.h"
@@ -191,31 +191,10 @@ Written by Nicholas Phillips.
 ---------------------------------------------------------------------------- */
 void SkyTexture::run()
 {
-	//cout << "starting paint" << endl;
 	float v = 0.0;
 	long texk = 0;
 	QColor color, blank(255, 255, 255, 255);
 	for(uint pix = 0; pix < skymap->size(); pix++) {
-		/*
-		switch (dpyfield)
-		{
-			case 4 :			// N Obs
-				v = (*skymap)[pix].Nobs();
-				break;
-			case 3 :			// P Polarization
-				v = (*skymap)[pix].Pmag();
-				break;
-			case 2 :			// U Polarization
-				v = (*skymap)[pix].U();
-				break;
-			case 1 :			// Q Polarization
-				v = (*skymap)[pix].Q();
-				break;
-			default :			// Temperature
-				v = (*skymap)[pix].T();
-				break;
-		}
-		*/
 		switch (dpyfield)
 		{
 			case Nobs :			// N Obs
@@ -244,13 +223,8 @@ void SkyTexture::run()
 		texture[texk++] = color.green();
 		texture[texk++] = color.blue();
 		texture[texk++] = 255;
-		if( restart ) {
-			//cout << "\tearly return" << endl;
-			return;
-		}
+		if( restart ) {return;}
 	}
-	//glTexture();
-	//cout << "\tcompleted" << endl;
 	update = false;
 	return;
 }

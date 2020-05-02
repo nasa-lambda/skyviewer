@@ -4,7 +4,6 @@ HEALPix-related local routines.
 /*
 			Fetch header files.
 */
-#include <iostream>
 #include <math.h>
 #include "heal.h"
 #include "map_exception.h"
