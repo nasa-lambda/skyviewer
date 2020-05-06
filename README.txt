@@ -253,8 +253,8 @@ Suggestions http://lambda.gsfc.nasa.gov/contact/contact.cfm
 
 
 
-Nicholas G. Phillips, Nicholas.G.Phillips@nasa.gov
+Nicholas G. Phillips
 UMCP/NASA/GSFC, Greenbelt MD.
 
-Michael R. Greason, Michael.R.Greason@nasa.gov
+Michael R. Greason
 ADNET Systems/NASA/GSFC, Greenbelt MD.
