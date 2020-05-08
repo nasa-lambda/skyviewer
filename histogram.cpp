@@ -9,8 +9,6 @@
 // Copyright: See COPYING file that comes with this distribution
 //
 //
-
-#include <iostream>
 #include <iomanip>
 #include <math.h>
 #include "histogram.h"
@@ -67,7 +65,6 @@ void Histogram::build(vector<float> &x, const float minr, const float maxr)
 	h.clear();
 	h.resize(nbin);
 	long n = x.size();
-
 	hmax=0;
 	for(long i = 0; i < n; i++) {
 		long bin = (long)(nbin*(x[i]-minr)/(maxr-minr));

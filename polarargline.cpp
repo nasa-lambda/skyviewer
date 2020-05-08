@@ -7,7 +7,6 @@ QT4 adaption by Michael R. Greason, ADNET, 27 August 2007
 /*
 			Fetch header files.
 */
-#include <iostream>
 #include "polarargline.h"
 #include "heal.h"
 

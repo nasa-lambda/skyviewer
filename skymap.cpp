@@ -8,27 +8,37 @@ Adapted for WMAP.  FITS and copy operator added.  Michael R. Greason, ADNET,
 readFITS modified to support multiple values in a single table cell.
     MRG, ADNET, 13 January 2009.
 ============================================================================ */
-#include <iostream>
 #include <math.h>
 #include <stdio.h>
 #include "skymap.h"
 #include "controldialog.h"
 #include "enums.h"
 
+#ifndef HEALPIX_NULLVAL
+#define HEALPIX_NULLVAL (-1.6375e30)
+#endif
+
 using namespace std;
 /*
 			Constants.
 */
 char  ICOLNAME[]  = "TEMPERATURE";
+char  ICOLNAMEA[] = "I_STOKES";
+char  ICOLNAMEB[] = "I_Stokes";
 char  QCOLNAME[]  = "Q_POLARISATION";
 char  QCOLNAMEA[] = "QPOLARISATION";
 char  QCOLNAMEB[] = "Q_POLARIZATION";
 char  QCOLNAMEC[] = "QPOLARIZATION";
+char  QCOLNAMED[] = "Q_STOKES";
+char  QCOLNAMEE[] = "Q_Stokes";
 char  UCOLNAME[]  = "U_POLARISATION";
 char  UCOLNAMEA[] = "UPOLARISATION";
 char  UCOLNAMEB[] = "U_POLARIZATION";
 char  UCOLNAMEC[] = "UPOLARIZATION";
+char  UCOLNAMED[] = "U_STOKES";
+char  UCOLNAMEE[] = "U_Stokes";
 char  NCOLNAME[]  = "N_OBS";
+char  NCOLNAMEA[] = "HITS";
 
 char  DEFTABLE[]  = "Sky Maps";
 char  DEFTUNIT[]  = "mK";
@@ -836,12 +846,15 @@ Returned:
 ---------------------------------------------------------------------------- */
 void Skymap::readFITS(const char* filename, ControlDialog *progwin)
 {
-	fitsfile *fptr;
-	int      status = 0, icol = 0, qcol = 0, ucol = 0, ncol = 0, scol = 0;
-	int      i, t, hducnt, hdutype, naxis;
-	long     numrow, numcol, numpix, naxes[2];
-	Type     maptyp;
-	float    *tmp = NULL, nul = -999.;
+    fitsfile *fptr;
+    int      status = 0, icol = 0, qcol = 0, ucol = 0, ncol = 0, scol = 0, planck_map = 0;
+    int      i, t, hducnt, hdutype, naxis, bstatus=0;
+    long     numrow, numcol, numpix, naxes[2];
+    char     comment[FLEN_COMMENT];
+    double   badvalue;
+    float    fbadvalue=HEALPIX_NULLVAL;
+    Type     maptyp;
+    float    *tmp = NULL, nul = -999.;
 /*
 			Initialize.
 */
@@ -866,6 +879,18 @@ void Skymap::readFITS(const char* filename, ControlDialog *progwin)
 			throw MapException(MapException::FITSError, status);
 		if (hdutype != BINARY_TBL) continue;
 		fits_get_colnum(fptr, CASEINSEN, ICOLNAME, &t, &status);
+        if (status != 0)
+        {
+            status = 0;
+            fits_get_colnum(fptr, CASEINSEN, ICOLNAMEA, &t, &status);
+            planck_map = 1;
+        }
+        if (status != 0)
+        {
+            status = 0;
+            fits_get_colnum(fptr, CASEINSEN, ICOLNAMEB, &t, &status);
+            planck_map = 1;
+        }
 		if (status != 0) continue;
 		icol = t;
 	}
@@ -876,6 +901,11 @@ void Skymap::readFITS(const char* filename, ControlDialog *progwin)
 			Determine the size of the map.
 */
 	fits_read_tdim(fptr, icol, 2, &naxis, naxes, &status);
+    if (planck_map)
+    {
+        fits_read_key_dbl(fptr, "BAD_DATA", &badvalue, comment, &bstatus);
+        if (bstatus==0) fbadvalue=(float) badvalue;
+    }
 	fits_get_num_rows(fptr, &numrow, &status);
 	if (status != 0) throw MapException(MapException::FITSError, status);
 	numcol = (naxes[0] > 1) ? naxes[0] : 1;
@@ -884,17 +914,36 @@ void Skymap::readFITS(const char* filename, ControlDialog *progwin)
 			Identify the map.  Both Q and U must be supplied for polarization
 			data to be stored.  Allocate space.
 */
-	if (fits_get_colnum(fptr, CASEINSEN, NCOLNAME, &t, &status) == 0) ncol = t;
+    fits_get_colnum(fptr, CASEINSEN, NCOLNAME, &t, &status);
+    if (status == 0) ncol = t;
+    if ((ncol==0) && (status > 0)) {status = 0; fits_get_colnum(fptr, CASEINSEN, NCOLNAMEA, &t, &status);};
+    if (status == 0) ncol = t; else status = 0;
 
-	if (fits_get_colnum(fptr, CASEINSEN, QCOLNAME, &t, &status) == 0) qcol = t;
-	if ((qcol == 0) && (fits_get_colnum(fptr, CASEINSEN, QCOLNAMEA, &t, &status) == 0)) qcol = t;
-	if ((qcol == 0) && (fits_get_colnum(fptr, CASEINSEN, QCOLNAMEB, &t, &status) == 0)) qcol = t;
-	if ((qcol == 0) && (fits_get_colnum(fptr, CASEINSEN, QCOLNAMEC, &t, &status) == 0)) qcol = t;
+    fits_get_colnum(fptr, CASEINSEN, QCOLNAME, &t, &status);
+    if (status == 0) qcol = t;
+    if ((qcol==0) && (status > 0)) {status = 0; fits_get_colnum(fptr, CASEINSEN, QCOLNAMEA, &t, &status);};
+    if (status == 0) qcol = t;
+    if ((qcol==0) && (status > 0)) {status = 0; fits_get_colnum(fptr, CASEINSEN, QCOLNAMEB, &t, &status);};
+    if (status == 0) qcol = t;
+    if ((qcol==0) && (status > 0)) {status = 0; fits_get_colnum(fptr, CASEINSEN, QCOLNAMEC, &t, &status);};
+    if (status == 0) qcol = t;
+    if ((qcol==0) && (status > 0)) {status = 0; fits_get_colnum(fptr, CASEINSEN, QCOLNAMED, &t, &status);};
+    if (status == 0) qcol = t;
+    if ((qcol==0) && (status > 0)) {status = 0; fits_get_colnum(fptr, CASEINSEN, QCOLNAMEE, &t, &status);};
+    if (status == 0) qcol = t; else status = 0;
 
-	if (fits_get_colnum(fptr, CASEINSEN, UCOLNAME, &t, &status) == 0) ucol = t;
-	if ((ucol == 0) && (fits_get_colnum(fptr, CASEINSEN, UCOLNAMEA, &t, &status) == 0)) ucol = t;
-	if ((ucol == 0) && (fits_get_colnum(fptr, CASEINSEN, UCOLNAMEB, &t, &status) == 0)) ucol = t;
-	if ((ucol == 0) && (fits_get_colnum(fptr, CASEINSEN, UCOLNAMEC, &t, &status) == 0)) ucol = t;
+    fits_get_colnum(fptr, CASEINSEN, UCOLNAME, &t, &status);
+    if (status == 0) ucol = t;
+    if ((ucol==0) && (status > 0)) {status = 0; fits_get_colnum(fptr, CASEINSEN, UCOLNAMEA, &t, &status);};
+    if (status == 0) ucol = t;
+    if ((ucol==0) && (status > 0)) {status = 0; fits_get_colnum(fptr, CASEINSEN, UCOLNAMEB, &t, &status);};
+    if (status == 0) ucol = t;
+    if ((ucol==0) && (status > 0)) {status = 0; fits_get_colnum(fptr, CASEINSEN, UCOLNAMEC, &t, &status);};
+    if (status == 0) ucol = t;
+    if ((ucol==0) && (status > 0)) {status = 0; fits_get_colnum(fptr, CASEINSEN, UCOLNAMED, &t, &status);};
+    if (status == 0) ucol = t;
+    if ((ucol==0) && (status > 0)) {status = 0; fits_get_colnum(fptr, CASEINSEN, UCOLNAMEE, &t, &status);};
+    if (status == 0) ucol = t;
 
 	if ((qcol == 0) || (ucol == 0)) qcol = ucol = scol = 0;
 
@@ -925,7 +974,17 @@ void Skymap::readFITS(const char* filename, ControlDialog *progwin)
 		if (progwin != NULL) progwin->loadField(I);
 		if (fits_read_col(fptr, TFLOAT, icol, 1, 1, numpix, &nul, tmp, &t, &status) != 0)
 			throw MapException(MapException::FITSError, status);
-		for (i = 0; i < numpix; i++) (*this)[i].T() = tmp[i];
+        for (i = 0; i < numpix; i++)
+        {
+            if (tmp[i] == fbadvalue)
+            {
+                (*this)[i].T() = 0.0;
+            }
+            else
+            {
+                (*this)[i].T() = tmp[i];
+            };
+         }
 	}
 /*
 				Stokes Q.
@@ -935,7 +994,17 @@ void Skymap::readFITS(const char* filename, ControlDialog *progwin)
 		if (progwin != NULL) progwin->loadField(Q);
 		if (fits_read_col(fptr, TFLOAT, qcol, 1, 1, numpix, &nul, tmp, &t, &status) != 0)
 			throw MapException(MapException::FITSError, status);
-		for (i = 0; i < numpix; i++) (*this)[i].Q() = tmp[i];
+        for (i = 0; i < numpix; i++)
+        {
+            if (tmp[i] == fbadvalue)
+            {
+                (*this)[i].Q() = 0.0;
+            }
+            else
+            {
+                (*this)[i].Q() = tmp[i];
+            };
+        }
 	}
 /*
 				Stokes U.
@@ -945,7 +1014,17 @@ void Skymap::readFITS(const char* filename, ControlDialog *progwin)
 		if (progwin != NULL) progwin->loadField(U);
 		if (fits_read_col(fptr, TFLOAT, ucol, 1, 1, numpix, &nul, tmp, &t, &status) != 0)
 			throw MapException(MapException::FITSError, status);
-		for (i = 0; i < numpix; i++) (*this)[i].U() = tmp[i];
+        for (i = 0; i < numpix; i++)
+        {
+            if (tmp[i] == fbadvalue)
+            {
+                (*this)[i].U() = 0.0;
+            }
+            else
+            {
+                (*this)[i].U() = tmp[i];
+            };
+        }
 	}
 /*
 				N_Obs.

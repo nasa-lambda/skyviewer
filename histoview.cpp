@@ -10,7 +10,6 @@
 //
 //
 #include <math.h>
-#include <iostream>
 #include <iomanip>
 #include <QPainter>
 #include "histogram.h"
@@ -31,17 +30,13 @@ Written by Nicholas Phillips, UMCP, 6 August 2008.
 ------------------------------------------------------------------------------------ */
 HistoView::HistoView(QWidget *parent) : QWidget(parent)
 {
-	histo = 0;	// So no segfaults while we wait for some data to paint
+    histo = 0;	// So no degfaults while we wait for some data to paint
 	ct = 0;
 
 	h = 128;
 	w = 256;
 	w1=  64;
-	/*
-	h = 320;
-	w = 480;
-	w1= 80;
-	*/
+
 	setBackgroundRole(QPalette::Base);
 	setAutoFillBackground(true);
 }
@@ -123,38 +118,38 @@ void HistoView::paintEvent(QPaintEvent *)
 	float b = z/(w-1.);
 
 	QPainter painter(this);
-	painter.setPen(QPen(QColor("black")));
+    painter.setPen(QPen(QColor("black")));
 	painter.drawLine(w1-1,   0, w1-1,   h);
 	painter.drawLine(w+w1-1, 0, w+w1-1, h);
 
 	QColor color;
 	float x0,x1,r,cv;
-	for(int p = 0; p < w+2*w1-1; p ++) {
-		//cout << setw(5) << p;
-		x0 = a + b*p;
+    for(int p = 0; p < w+2*w1-1; p ++)
+    {
+        x0 = a + b*p;
 		x1 = a + b*(p+1);
 
 		if( (x0 <= 0) || (x1 >= 1) ) 
-			r=0;
+            r = 0;
 		else
 			r = (*histo)(x0,x1);
 
-		//cout << setw(3) << ((p < w1) || (p >= w+w1));
-
 		if( (p < w1) || (p >= w+w1) )
-			painter.setPen(QPen(QColor("black")));
-		else {
-			if( ct != NULL ) {
-				cv = ((float)(p-w1))/(w-1);
-				painter.setPen(QPen((*ct)(cv)));
+            painter.setPen(QPen(QColor("black")));
+        else
+        {
+            if( ct != NULL )
+            {
+                cv = ((float)(p-w1))/(w-1);
+                painter.setPen(QPen((*ct)(cv)));
 			}
-			else {
-				color.setHsvF(((float)(p-w1))/(1.5*w),1,1);
-			//cout << setw(10) << ((float)(p-w1))/(w-1);
-				painter.setPen(QPen(color));
+            else
+            {
+                cv = ((float)(w+w1-p-1))/(1.5*w);
+                color.setHsvF(cv,1,1);
+                painter.setPen(QPen(color));
 			}
 		}
-		//cout << endl;
 		painter.drawLine(p,(int)(h*(1-r)),p,h);
 	}
 	return;

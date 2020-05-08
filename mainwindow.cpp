@@ -7,7 +7,6 @@ QT4 implementation.  Michael R. Greason, ADNET, 23 August 2007.
 /*
 			Fetch header files.
 */
-#include <iostream>
 #include <stdio.h>
 #include <QMessageBox>
 #include <QFileDialog>

@@ -9,7 +9,6 @@ QT4 adaption and Black/White color table by Michael R. Greason, ADNET,
 /*
 			Fetch header files.
 */
-#include <iostream>
 #include "colortable.h"
 #include "define_colortable.h"
 
@@ -103,7 +102,6 @@ QColor ColorTable::operator[](float v) const
 	v = v < 0 ? 0 : v;
 	v = v > 1 ? 1 : v;
 	uint idx = (uint)(v*(ncols-1));
-	//cout << idx;
 	return table[idx];
 }
 /* ----------------------------------------------------------------------------
@@ -121,7 +119,6 @@ Written by Michael R. Greason, ADNET, 27 August 2007.
 ---------------------------------------------------------------------------- */
 QPixmap ColorTable::getPixmap()
 {
-	cout << "ColorTable::getPixmap(): Not implemented yet!" << endl;
 	return QPixmap();
 }
 /* ============================================================================
