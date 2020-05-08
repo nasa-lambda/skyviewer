@@ -62,7 +62,7 @@ LANGUAGE = C++
 TEMPLATE = app
 CONFIG += release warn_on qt thread
 CONFIG += thread
-LIBS += -lcfitsio -lQGLViewer-qt4
+LIBS += -lcfitsio -lQGLViewer
 LIBS += -lchealpix
 contains( QT_VERSION, "^4\..*" ){
   QT *= xml opengl
@@ -94,7 +94,7 @@ unix{
 #    error( Replace the ~ by the "equals" character in the above line )
 #  }
   unix{
-    LIBS *= -L$$LIB_DIR -lQGLViewer-qt4
+    LIBS *= -L$$LIB_DIR -lQGLViewer
   }
   macx{
     LIBS *= -lobjc
