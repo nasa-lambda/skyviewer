@@ -62,11 +62,19 @@ LANGUAGE = C++
 TEMPLATE = app
 CONFIG += release warn_on qt thread
 CONFIG += thread
-LIBS += -lcfitsio -lQGLViewer
-LIBS += -lchealpix
+LIBS += -L/usr/local/lib -lchealpix -lcfitsio
+QMAKE_CXXFLAGS="-DTOASCII=toAscii -DFROMASCII=fromAscii"
+QT += core
 contains( QT_VERSION, "^4\..*" ){
-  QT *= xml opengl
+  QT += xml opengl
 }
+contains( QT_VERSION, "^5\..*" ){
+  QT += widgets gui xml opengl
+  QMAKE_CXXFLAGS="-DTOASCII=toLatin1 -DFROMASCII=fromLatin1"
+}
+QMAKE_CFLAGS += $$(CFLAGS)
+QMAKE_CXXFLAGS += $$(CXXFLAGS)
+QMAKE_LFLAGS += $$(LDFLAGS)
 unix{
   UI_DIR = ui
   MOC_DIR = moc
@@ -83,6 +91,13 @@ unix{
   isEmpty( INCLUDE_DIR ){
     INCLUDE_DIR = $$PREFIX/include
   }
+  LIBS += -L$$LIB_DIR
+  contains( QT_VERSION, "^4\..*" ){
+    LIBS += -lQGLViewer
+  }
+  contains( QT_VERSION, "^5\..*" ){
+    LIBS += -lQGLViewer-qt5
+  }
 #  !exists( $$INCLUDE_DIR/QGLViewer/qglviewer.h ){
 #    message( Unable to find QGLViewer/qglviewer.h in $$INCLUDE_PATH )
 #    message( Use qmake INCLUDE_DIR~Path/To/QGLViewer/HeaderFiles )
@@ -93,11 +108,8 @@ unix{
 #    message( You should run qmake LIB_DIR~Path/To/QGLViewer/Lib.so )
 #    error( Replace the ~ by the "equals" character in the above line )
 #  }
-  unix{
-    LIBS *= -L$$LIB_DIR -lQGLViewer
-  }
   macx{
-    LIBS *= -lobjc
+    LIBS *= -lobjc -lQGLViewer
   }
 }
 win32{
@@ -106,3 +118,5 @@ win32{
   DEFINES *= QT_THREAD_SUPPORT
   LIBS *= libQGLViewer
 }
+LIBS += -lchealpix -lcfitsio
+

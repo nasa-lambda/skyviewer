@@ -39,7 +39,8 @@ http://lambda.gsfc.nasa.gov/contact/contact.cfm
 
     * Qt <http://www.trolltech.com/products/qt/index.html>, >= v4.4.3
         Note: This version of skyviewer does not work with earlier versions of QT
-	(e.g., QT3).
+	(e.g., QT3). It has been successfully built using QT v5 with a caveat
+        mentioned below.
     * CFITSIO
       <http://legacy.gsfc.nasa.gov/docs/software/fitsio/fitsio.html>, A
       FITS File Subroutine Library, >= v2.440
@@ -55,11 +56,20 @@ package isn't worth building, just that is all that is needed here.
 
 This version has been successfully built against libQGLViewer 2.5.1.
 
+The QT5 build under linux tested QT 5.9.7 and libQGLViewer 2.7.2. There
+is one caveat: linking the application (and the libQGLViewer examples)
+resulted in a thrown error about an undefined reference to 
+QApplication::clipboard(). We were unable to solve this problem but
+believe it to be part of QT5. We found it necessary to comment out 
+the body of the following function in libQGLViewer:
+void QGLViewer::snapshotToClipboard()
+to allow software to build. Therefore it may not be possible to take 
+a snapshot of the current view with this software configuration.
 => Download
 
 Source code:
 
-http://lambda.gsfc.nasa.gov/toolbox/skyviewer/skyviewer-1.0.1.tar.gz
+https://github.com/nasa-lambda/skyviewer.git
 
 => Compiling
 
@@ -92,39 +102,16 @@ in full 3D glory.
 The first step is to install the various required libraries.  Then unpack
 skyviewer and follow the Unix build instructions.
 
-The LAMBDA team has built Skyviewer under Windows and is making this
-executable available to any that would like to use it.  This executable was
-built with the following tools (built and/or installed in this order):
-
-Microsoft Windows XP SP3
-Open Source Qt version 2009.1.10, also installing the bundled MinGW
-libQGLViewer 2.3.1
-CFITSIO 3.130
-HEALPix 2.10
-Skyviewer 1.0.0
-
-Several DLL's from Qt and libQGLViewer are also included; these should be
-stored either in the same directory as the executable or in the directory:
-c:\Windows\System32
-
+The LAMBDA team has built Skyviewer under Windows XP in the path using an 
+older Qt and the MinGW environment.
 
 Please let us know of any successes or failures you encounter: 
 http://lambda.gsfc.nasa.gov/contact/contact.cfm
 
 Mac OSX
 
-Use Fink to install the qt4-mac package.
-
-Install the libGLViewer package normally.  The libQGLViewer library will
-be installed as a framework.
-
-Download and build cfitsio and HEALPix.  Be sure to specify the '-arch i386'
-in the compile and link commands.
-
-Download and unpack skyviewer.  After executing the qmake command it will
-be necessary to edit the Makefile to replace the '-lQGLViewer' link option
-with '-framework QGLViewer'.  At this point, the make command should 
-successfully build the application.
+The LAMBDA team has built Skyviewer on a Mac using the Fink environment and Qt4.
+They anticipate that it should still build and plan to test this in the near future.
 
 => Usage
 

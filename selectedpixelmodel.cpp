@@ -98,6 +98,7 @@ QVariant SelectedPixelModel::headerData(const int i, Qt::Orientation /*o*/, int 
 
 void SelectedPixelModel::set(Skymap *map)
 {
+	beginResetModel();
 	headers.clear();
 	pidx.clear();
 	ncols = 1;
@@ -123,7 +124,7 @@ void SelectedPixelModel::set(Skymap *map)
 	nrows=0;
 	pixs.clear();
 
-	reset();
+	endResetModel();
 	return;
 }
 /*
@@ -133,27 +134,30 @@ void SelectedPixelModel::set(Skymap *map)
 */
 bool SelectedPixelModel::operator()(int i, BasePixel *pix)
 {
+	beginResetModel();
 	for(PixList::iterator pi = pixs.begin();pi != pixs.end(); pi++) {
 		if( pi->i == i ) {
 			pixs.erase(pi);
-			reset();
+			endResetModel();
 			return false;
 		}
 	}
 	SelectedPixel sp(i,pix);
 	pixs.push_back(sp);
-	reset();
+	endResetModel();
 	return true;
 }
 void SelectedPixelModel::clear()
 {
+	beginResetModel();
 	pixs.clear();
-	reset();
+	endResetModel();
 }
 
 //============================================================================
 void SelectedPixelModel::asStats(SelectedPixelModel *data)
 {
+	beginResetModel();
 	mode = stats;
 	data4stats = data;
 	// Copy Header and indexing info
@@ -170,7 +174,7 @@ void SelectedPixelModel::asStats(SelectedPixelModel *data)
 		pixs.push_back(sp);
 	}
 	nrows = 4;
-	reset();
+	endResetModel();
 	//updateStats();
 }
 
@@ -179,6 +183,7 @@ void SelectedPixelModel::updateStats()
 {
 	if( ! data4stats )
 		return;
+	beginResetModel();
 	n = data4stats->pixs.size();
 	for(uint i = 0; i < pidx.size(); i++) {
 		int j = pidx[i];
@@ -197,12 +202,13 @@ void SelectedPixelModel::updateStats()
 		if( n > 1 ) 
 			(*pixs[1].p)[j] = sqrt(ttlsqr/n - (ttl/n)*(ttl/n));
 	}
-	reset();
+	endResetModel();
 	return;
 }
 //============================================================================
 void SelectedPixelModel::asStatus()
 {
+	beginResetModel();
 	if( mode != status ) {
 		headers.clear();
 		pidx.resize(5);
@@ -231,7 +237,7 @@ void SelectedPixelModel::asStatus()
 		for(int k = 0; k <  ncols; k++)
 			(*pixs[i].p)[pidx[k]] = 0;
 	}
-	reset();
+	endResetModel();
 	
 	return;
 }
@@ -239,6 +245,7 @@ void SelectedPixelModel::asStatus()
 void SelectedPixelModel::hasField(Field f, bool b)
 {
 	int i = 0;
+	beginResetModel();
 	switch(f) {
 		case I: i = 0;
 			break;
@@ -252,12 +259,13 @@ void SelectedPixelModel::hasField(Field f, bool b)
 			break;
 	}
 	(*pixs[0].p)[pidx[i]] = b ? 1 : -1;
-	reset();
+	endResetModel();
 	return;
 }
 void SelectedPixelModel::loadField(Field f)
 {
 	int i = 0;
+	beginResetModel();
 	switch(f) {
 		case I: i = 0;
 			break;
@@ -271,11 +279,12 @@ void SelectedPixelModel::loadField(Field f)
 			break;
 	}
 	(*pixs[1].p)[pidx[i]] = 1;
-	reset();
+	endResetModel();
 	return;
 }
 void SelectedPixelModel::asStats(Skymap *map)
 {
+	beginResetModel();
 	set(map);
 	headers[0] = "Stat";
 	statnames << "Mean" << "Std Dev" << "Min" << "Max";
@@ -308,7 +317,7 @@ void SelectedPixelModel::asStats(Skymap *map)
 	
 	mode = stats;
 
-	reset();
+	endResetModel();
 }
 //============================================================================
 void SelectedPixelModel::writeListToFile (const QString &dst)

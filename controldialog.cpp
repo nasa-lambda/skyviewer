@@ -95,7 +95,7 @@ void ControlDialog::loadNSide(int ns, int ord)
 {
 	QString str;
 	nside->setText(QString("Nside:  %1;").arg(ns));
-	ordering->setText(str.fromAscii((ord == 2) ? "Ordering:  RING" : "Ordering:  NESTED"));
+	ordering->setText(str.FROMASCII((ord == 2) ? "Ordering:  RING" : "Ordering:  NESTED"));
 }
 /* ------------------------------------------------------------------------------------
 'setStats' Display the stats for the given map
