@@ -37,26 +37,21 @@ http://lambda.gsfc.nasa.gov/contact/contact.cfm
 
 => Requirements
 
-    * Qt <http://www.trolltech.com/products/qt/index.html>, >= v4.4.3
-        Note: This version of skyviewer does not work with earlier versions of QT
-	(e.g., QT3). It has been successfully built using QT v5 with a caveat
-        mentioned below.
+    * Qt <http://www.trolltech.com/products/qt/index.html>, >= v5.9
     * CFITSIO
       <http://legacy.gsfc.nasa.gov/docs/software/fitsio/fitsio.html>, A
-      FITS File Subroutine Library, >= v2.440
-    * HEALPix <http://www.eso.org/science/healpix/>, >= v2.01
+      FITS File Subroutine Library, >= v3.48
+    * HEALPix <http://www.eso.org/science/healpix/>, >= v3.6
     * libQGLViewer
       <http://artis.imag.fr/Members/Gilles.Debunne/QGLViewer/>,
-      >= v2.2.4
+      >= v2.7.2
 
 *Note*: The entire HEALPix package is not needed, just the C library.
 Enter the directory /path/to/Healpix_2/src/C/subs/ and make and make
 install. This should be enough. Not to say the rest of the HEALPix
 package isn't worth building, just that is all that is needed here.
 
-This version has been successfully built against libQGLViewer 2.5.1.
-
-The QT5 build under linux tested QT 5.9.7 and libQGLViewer 2.7.2. There
+The QT5 build under Linux tested QT 5.9.7 and libQGLViewer 2.7.2. There
 is one caveat: linking the application (and the libQGLViewer examples)
 resulted in a thrown error about an undefined reference to 
 QApplication::clipboard(). We were unable to solve this problem but
@@ -73,16 +68,15 @@ https://github.com/nasa-lambda/skyviewer.git
 
 => Compiling
 
-This version was developed this on a RedHat Enterprise Linux system and
-it has been successfully built on a Microsoft Windows XP system and on
+An older version of this software has been successfully built on a Microsoft Windows XP system and on
 a Mac OSX 10.6 system.
 
    Unix Build Instructions:
 
 Ungzip and untar the file in a convenient location, qmake and make:
 
-tar xfz skyviewer-1.0.1.tar.gz
-cd skyviewer-1.0.1/
+tar xfz skyviewer.tar.gz
+cd skyviewer/
 qmake
 make
 
@@ -111,7 +105,7 @@ http://lambda.gsfc.nasa.gov/contact/contact.cfm
 Mac OSX
 
 The LAMBDA team has built Skyviewer on a Mac using the Fink environment and Qt4.
-They anticipate that it should still build and plan to test this in the near future.
+They anticipate that it should still build and hope to test this in the near future.
 
 => Usage
 
@@ -168,6 +162,10 @@ The list of selected pixel values can be saved to an ASCII file as
 multi-column list, with headers.
 
 => Change Log
+
+July 9, 2020
+    * Release 1.1
+    * Built against libQGLViewer 2.7.2 and Qt 5.9. This required rewriting the Qt signal/slot connections.
 
 July 3, 2014
     * Release 1.0.1

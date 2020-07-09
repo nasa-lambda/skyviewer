@@ -32,8 +32,8 @@ RangeControl::RangeControl(QWidget *parent) : QWidget(parent)
 	rigging = riggingSelect->currentText().toInt();
 	pv = Off;
 
-	connect(histogramWidget,SIGNAL(newRange(float,float)),this,SLOT(updateTexture(float,float)));
-
+	connect(histogramWidget, static_cast<void(HistogramWidget::*)(float,float)>(&HistogramWidget::newRange),
+	        this,            static_cast<void(RangeControl::*)(float,float)>(&RangeControl::updateTexture));
 };
 
 /* ------------------------------------------------------------------------------------

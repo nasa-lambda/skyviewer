@@ -31,13 +31,10 @@ ControlDialog::ControlDialog(QWidget *parent) : QDialog(parent)
 	pixlistview->setModel(&selectedpixels);
 	clearSelection = pixlistview->selectionModel();
 
-	connect(
-		clearSelection, SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)),
-		this,		SLOT(updateClearSelection(const QItemSelection &, const QItemSelection &))
-		);
-
-	connect( pixlistview, SIGNAL(doubleClicked(const QModelIndex &) ),
-		this, SLOT( doubleClicked(const QModelIndex &) ));
+	connect (clearSelection, static_cast<void(QItemSelectionModel::*)(const QItemSelection &, const QItemSelection &)>(&QItemSelectionModel::selectionChanged),
+	         this,           static_cast<void(ControlDialog::*)(const QItemSelection &, const QItemSelection &)>(&ControlDialog::updateClearSelection));
+	connect (pixlistview, static_cast<void(QTreeView::*)(const QModelIndex &)>(&QTreeView::doubleClicked),
+	         this,        static_cast<void(ControlDialog::*)(const QModelIndex &)>(&ControlDialog::doubleClicked));
 
 	pixstatslistview->setModel(&statspixels);
 	statslistview->setModel(&mapstats);

@@ -80,10 +80,12 @@ QT4 implementation.  Michael R. Greason, ADNET, 28 August 2007.
 void SkyViewer::setTexture(SkyTexture *t)
 {
 	if( texture )
-		disconnect( texture, SIGNAL(retextured()), this, SLOT( updateGL() ) );
+		disconnect( texture, static_cast<void(SkyTexture::*)()>(&SkyTexture::retextured),
+		            this,    static_cast<void(SkyViewer::*)()>(&SkyViewer::update));
 	
 	texture = t;
-	connect( texture, SIGNAL(retextured()), this, SLOT( updateGL() ) );
+	connect( texture, static_cast<void(SkyTexture::*)()>(&SkyTexture::retextured),
+	         this,    static_cast<void(QGLViewer::*)()>(&SkyViewer::update));
 }
 /* ----------------------------------------------------------------------------
 'init' is called the first time this widget is displayed, initializing the

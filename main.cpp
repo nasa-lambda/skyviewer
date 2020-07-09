@@ -11,7 +11,8 @@ int main( int argc, char ** argv )
 	QApplication app( argc, argv );
 	mainWindow *w = new mainWindow();
 	w->show();
-	app.connect( &app, SIGNAL( lastWindowClosed() ), &app, SLOT( quit() ) );
+	app.connect( &app, &QApplication::lastWindowClosed,
+	             &app, &QApplication::quit);
 	if (argc > 1) w->readFile(argv[argc-1]);
 	return app.exec();
 }

@@ -3,14 +3,14 @@
 <p>View a Healpix-based skymap, stored in a <b>FITS</b> file.</p>
 
 <p>Program: skyviewer<br>
-Version: 1.0.0<br>
-Date: Feb, 2009<br>
+Version: 1.1.0<br>
+Date: July, 20920 <br>
 Authors: Nicholas Phillips and Michael Greason<br>
 Email: Nicholas.G.Phillips@nasa.gov, Michael.R.Greason@nasa.gov<br>
 Website: http://lambda.gsfc.nasa.gov/toolbox/tb_skyviewer_ov.cfm</p>
 
 <p>Requirements:<br>
 Cfitsio 3+<br>
-HEALpix 2+<br>
-libQGLViewer<br>
-QT 4+</p>
+HEALpix 3+<br>
+libQGLViewer 2.7.2+<br>
+QT 5+</p>

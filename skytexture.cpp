@@ -33,7 +33,8 @@ SkyTexture::SkyTexture() : texture(0), texture_res(0), nside(0)
 	order = HealpixMap::Undefined;
 	timer = new QTimer(this);
 	timer->setInterval(50);
-	connect(timer, SIGNAL(timeout()), this, SLOT(reTexture()));
+	connect(timer, &QTimer::timeout, 
+	        this, static_cast<void(SkyTexture::*)()>(&SkyTexture::reTexture));
 
 }
 /* ----------------------------------------------------------------------------

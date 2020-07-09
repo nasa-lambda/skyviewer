@@ -101,38 +101,36 @@ mainWindow::mainWindow(QWidget *parent) : QMainWindow(parent)
 /*
 			Define the connections.
 */
-	connect(actionOpen,              SIGNAL(activated()), this,   SLOT(fileLoad()));
-	connect(actionReload,            SIGNAL(activated()), this,   SLOT(fileReload()));
-	connect(actionNew,               SIGNAL(activated()), this,   SLOT(fileNew()));
-	connect(actionSnapshot,          SIGNAL(activated()), this,   SLOT(fileSnapshot()));
-	connect(actionClose,             SIGNAL(activated()), this,   SLOT(fileClose()));
-	connect(actionExit,              SIGNAL(activated()), this,   SLOT(fileExit()));
+	connect(actionOpen,              static_cast<void(QAction::*)(bool)>(&QAction::triggered), this,   static_cast<void(mainWindow::*)()>(&mainWindow::fileLoad));
+	connect(actionReload,            static_cast<void(QAction::*)(bool)>(&QAction::triggered), this,   static_cast<void(mainWindow::*)()>(&mainWindow::fileReload));
+	connect(actionNew,               static_cast<void(QAction::*)(bool)>(&QAction::triggered), this,   static_cast<void(mainWindow::*)()>(&mainWindow::fileNew));
+	connect(actionSnapshot,          static_cast<void(QAction::*)(bool)>(&QAction::triggered), this,   static_cast<void(mainWindow::*)()>(&mainWindow::fileSnapshot));
+	connect(actionClose,             static_cast<void(QAction::*)(bool)>(&QAction::triggered), this,   static_cast<void(mainWindow::*)()>(&mainWindow::fileClose));
+	connect(actionExit,              static_cast<void(QAction::*)(bool)>(&QAction::triggered), this,   static_cast<void(mainWindow::*)()>(&mainWindow::fileExit));
 
-	connect(action3D_Sphere_tb,      SIGNAL(activated()), this,   SLOT(proj3Dsphere()));
-	connect(action3D_Sphere_m,       SIGNAL(activated()), this,   SLOT(proj3Dsphere()));
-	connect(actionMollweide_tb,      SIGNAL(activated()), this,   SLOT(projMollweide()));
-	connect(actionMollweide_m,       SIGNAL(activated()), this,   SLOT(projMollweide()));
+	connect(action3D_Sphere_tb,      static_cast<void(QAction::*)(bool)>(&QAction::triggered), this,   static_cast<void(mainWindow::*)()>(&mainWindow::proj3Dsphere));
+	connect(action3D_Sphere_m,       static_cast<void(QAction::*)(bool)>(&QAction::triggered), this,   static_cast<void(mainWindow::*)()>(&mainWindow::proj3Dsphere));
+	connect(actionMollweide_tb,      static_cast<void(QAction::*)(bool)>(&QAction::triggered), this,   static_cast<void(mainWindow::*)()>(&mainWindow::projMollweide));
+	connect(actionMollweide_m,       static_cast<void(QAction::*)(bool)>(&QAction::triggered), this,   static_cast<void(mainWindow::*)()>(&mainWindow::projMollweide));
 
-	connect(actionTemperature,       SIGNAL(activated()), this,   SLOT(mapTemperature()));
-	connect(actionQ_Polarization,    SIGNAL(activated()), this,   SLOT(mapQPolarization()));
-	connect(actionU_Polarization,    SIGNAL(activated()), this,   SLOT(mapUPolarization()));
-	connect(actionP_Polarization,    SIGNAL(activated()), this,   SLOT(mapPPolarization()));
-	connect(actionNum_Obs,           SIGNAL(activated()), this,   SLOT(mapNumObs()));
+	connect(actionTemperature,       static_cast<void(QAction::*)(bool)>(&QAction::triggered), this,   static_cast<void(mainWindow::*)()>(&mainWindow::mapTemperature));
+	connect(actionQ_Polarization,    static_cast<void(QAction::*)(bool)>(&QAction::triggered), this,   static_cast<void(mainWindow::*)()>(&mainWindow::mapQPolarization));
+	connect(actionU_Polarization,    static_cast<void(QAction::*)(bool)>(&QAction::triggered), this,   static_cast<void(mainWindow::*)()>(&mainWindow::mapUPolarization));
+	connect(actionP_Polarization,    static_cast<void(QAction::*)(bool)>(&QAction::triggered), this,   static_cast<void(mainWindow::*)()>(&mainWindow::mapPPolarization));
+	connect(actionNum_Obs,           static_cast<void(QAction::*)(bool)>(&QAction::triggered), this,   static_cast<void(mainWindow::*)()>(&mainWindow::mapNumObs));
 
-	connect(actionPolarAnglesTB,     SIGNAL(activated()), this,   SLOT(mapPolVectTB()));
-	connect(actionPolarAnglesM,      SIGNAL(activated()), this,   SLOT(mapPolVectM()));
+	connect(actionPolarAnglesTB,     static_cast<void(QAction::*)(bool)>(&QAction::triggered), this,   static_cast<void(mainWindow::*)()>(&mainWindow::mapPolVectTB));
+	connect(actionPolarAnglesM,      static_cast<void(QAction::*)(bool)>(&QAction::triggered), this,   static_cast<void(mainWindow::*)()>(&mainWindow::mapPolVectM));
 
+	connect(actionHelp,              static_cast<void(QAction::*)(bool)>(&QAction::triggered), viewer, static_cast<void(SkyViewer::*)()>(&SkyViewer::help));
 
-	connect(actionHelp,              SIGNAL(activated()), viewer, SLOT(help()));
+	connect(rngctl,	static_cast<void(RangeControl::*)()>(&RangeControl::reTextureNeeded),	this, 	static_cast<void(mainWindow::*)()>(&mainWindow::reTexture));
+	connect(rngctl,	static_cast<void(RangeControl::*)()>(&RangeControl::changeProjRigging),	this, 	static_cast<void(mainWindow::*)()>(&mainWindow::newRigging));
+	connect(rngctl,	static_cast<void(RangeControl::*)()>(&RangeControl::changeFieldInfo),	this, 	static_cast<void(mainWindow::*)()>(&mainWindow::newField));
+	connect(rngctl,	static_cast<void(RangeControl::*)()>(&RangeControl::changePolVect),	this, 	static_cast<void(mainWindow::*)()>(&mainWindow::newPolVect));
 
-
-	connect(rngctl,	SIGNAL(reTextureNeeded()),	this, SLOT(reTexture()));
-	connect(rngctl,	SIGNAL(changeProjRigging()),	this, SLOT(newRigging()));
-	connect(rngctl,	SIGNAL(changeFieldInfo()),	this, SLOT(newField()));
-	connect(rngctl,	SIGNAL(changePolVect()),	this, SLOT(newPolVect()));
-
-	connect(ctl,	SIGNAL(resetPixels(std::vector<int>)),	this,	SLOT(unselectPixels(std::vector<int>)));
-	connect(ctl,	SIGNAL(recenterOnPixel(int)),		this,	SLOT(recenterOnPixel(int)));
+	connect(ctl, static_cast<void(ControlDialog::*)(std::vector<int>)>(&ControlDialog::resetPixels), this, static_cast<void(mainWindow::*)(std::vector<int>)>(&mainWindow::unselectPixels));
+	connect(ctl, static_cast<void(ControlDialog::*)(int)>(&ControlDialog::recenterOnPixel),          this, static_cast<void(mainWindow::*)(int)>(&mainWindow::recenterOnPixel));
 /*
 			Remaining initialization.
 */

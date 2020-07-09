@@ -31,12 +31,13 @@ HistogramWidget::HistogramWidget(QWidget *parent) : QWidget(parent), minz(0.0001
 	old_z = z = 1;
 
 	cztimer = new QTimer(this);
-	connect(cztimer, SIGNAL(timeout()), this, SLOT(setNewCenterZoom()));
+	connect(cztimer, &QTimer::timeout, this, &HistogramWidget::setNewCenterZoom);
 	
 	lutimer = new QTimer(this);
-	connect(lutimer, SIGNAL(timeout()), this, SLOT(setNewLowerUpper()));
+	connect(lutimer, &QTimer::timeout, this, &HistogramWidget::setNewLowerUpper);
 
-	connect(this, SIGNAL(newCenterZoom(float,float)),histoView,SLOT(setCenterZoom(float,float)));
+	connect(this,      static_cast<void(HistogramWidget::*)(float,float)>(&HistogramWidget::newCenterZoom),
+	        histoView, static_cast<void(HistoView::*)(float,float)>(&HistoView::setCenterZoom));
 
 	setNewRange();
 }
