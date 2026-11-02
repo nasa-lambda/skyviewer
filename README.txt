@@ -37,75 +37,135 @@ http://lambda.gsfc.nasa.gov/contact/contact.cfm
 
 => Requirements
 
-    * Qt <http://www.trolltech.com/products/qt/index.html>, >= v5.9
-    * CFITSIO
-      <http://legacy.gsfc.nasa.gov/docs/software/fitsio/fitsio.html>, A
-      FITS File Subroutine Library, >= v3.48
-    * HEALPix <http://www.eso.org/science/healpix/>, >= v3.6
-    * libQGLViewer
-      <http://artis.imag.fr/Members/Gilles.Debunne/QGLViewer/>,
-      >= v2.7.2
+    * Qt 5 (5.9 or later; tested with 5.15). Qt 6 is NOT supported.
+      <https://www.qt.io/>
+    * libQGLViewer 2.7.2, built against Qt 5
+      <https://github.com/GillesDebunne/libQGLViewer>
+    * CFITSIO >= 3.48
+      <https://heasarc.gsfc.nasa.gov/fitsio/>
+    * HEALPix C library (chealpix) >= 3.6
+      <https://healpix.sourceforge.io/>
 
-*Note*: The entire HEALPix package is not needed, just the C library.
-Enter the directory /path/to/Healpix_2/src/C/subs/ and make and make
-install. This should be enough. Not to say the rest of the HEALPix
-package isn't worth building, just that is all that is needed here.
+Only the HEALPix C library is needed, not the whole HEALPix package.
 
-The QT5 build under Linux tested QT 5.9.7 and libQGLViewer 2.7.2. There
-is one caveat: linking the application (and the libQGLViewer examples)
-resulted in a thrown error about an undefined reference to 
-QApplication::clipboard(). We were unable to solve this problem but
-believe it to be part of QT5. We found it necessary to comment out 
-the body of the following function in libQGLViewer:
-void QGLViewer::snapshotToClipboard()
-to allow software to build. Therefore it may not be possible to take 
-a snapshot of the current view with this software configuration.
 => Download
 
 Source code:
 
-https://github.com/nasa-lambda/skyviewer.git
+git clone https://github.com/nasa-lambda/skyviewer.git
 
 => Compiling
 
-An older version of this software has been successfully built on a Microsoft Windows XP system and on
-a Mac OSX 10.6 system.
+The build has three steps: install the dependencies, build and install
+libQGLViewer 2.7.2 against Qt 5, then build Skyviewer.
 
-   Unix Build Instructions:
+IMPORTANT: everything must be built with the *Qt 5* qmake. Homebrew and
+many Linux distributions now put Qt 6's qmake first on your PATH. If
+libQGLViewer gets built with Qt 6, Skyviewer will either fail to build or
+crash at startup because it loads both Qt 5 and Qt 6. Run "qmake -v" to see
+which Qt a given qmake uses.
 
-Ungzip and untar the file in a convenient location, qmake and make:
+   macOS Build Instructions (Homebrew; tested on Apple Silicon with Qt 5.15):
 
-tar xfz skyviewer.tar.gz
-cd skyviewer/
-qmake
-make
+1. Install the Xcode command line tools and Homebrew <https://brew.sh>,
+   then the dependencies:
 
-More recent versions of HEALPIX no longer include the mk_xy2pix function.
-It has been included in the heal.cpp file from an earlier version and a 
-flag has created at the top of the file (NEED_MKXY2PIX); this is enabled
-by default. If not needed or wanted, remove the 
-#define NEED_MKXY2PIX 1
-line from the top of this file.
+       xcode-select --install
+       brew install qt@5 cfitsio healpix
 
-If everything goes as it should, you should have the binary *skyviewer*.
-Put it where you like to keep your binaries and enjoy looking at skymaps
-in full 3D glory. 
+   To save typing, keep the path to the Qt 5 qmake in a shell variable:
+
+       QMAKE5=$(brew --prefix qt@5)/bin/qmake
+       $QMAKE5 -v          # should report "Using Qt version 5.x"
+
+2. Build libQGLViewer 2.7.2 and install it into ~/Library/Frameworks
+   (this location does not need sudo):
+
+       git clone https://github.com/GillesDebunne/libQGLViewer.git
+       cd libQGLViewer
+       git checkout v2.7.2
+       cd QGLViewer
+       $QMAKE5 LIB_DIR=$HOME/Library/Frameworks CONFIG+=sdk_no_version_check
+       make
+       make install
+       cd ../..
+
+   This creates ~/Library/Frameworks/QGLViewer.framework.
+
+3. Build Skyviewer:
+
+       cd skyviewer
+       $QMAKE5
+       make
+
+   qmake prints the QGLViewer.framework it found. It searches
+   ~/Library/Frameworks, /Library/Frameworks, /usr/local/lib and the
+   Homebrew lib directory, in that order. If you installed the framework
+   somewhere else, give qmake its directory:
+
+       $QMAKE5 QGLVIEWER_DIR=/path/to/dir/containing/QGLViewer.framework
+
+   The build automatically fixes the way skyviewer finds
+   QGLViewer.framework at launch, so you do not need install_name_tool.
+
+4. Run it:
+
+       open skyviewer.app --args "$PWD/test_iqu.fits"
+   or
+       ./skyviewer.app/Contents/MacOS/skyviewer test_iqu.fits
+
+   skyviewer.app uses the Homebrew Qt 5 and the QGLViewer.framework it
+   was built against. Leave those installed, and keep the framework where
+   it was when you built Skyviewer.
+
+   Linux Build Instructions:
+
+Install the Qt 5 development packages, CFITSIO, the HEALPix C library and
+libQGLViewer for Qt 5. On Debian/Ubuntu, for example:
+
+    sudo apt install build-essential qtbase5-dev libqt5opengl5-dev \
+        libqglviewer-dev-qt5 libcfitsio-dev libchealpix-dev libglu1-mesa-dev
+
+If your distribution has no Qt 5 libQGLViewer package, build v2.7.2 from
+source as in step 2 of the macOS instructions, using the Qt 5 qmake
+(often "qmake-qt5" or /usr/lib/qt5/bin/qmake) and "sudo make install"
+(the default install location is /usr/local).
+
+Then build Skyviewer:
+
+    cd skyviewer
+    qmake-qt5            # or the Qt 5 qmake on your system
+    make
+    ./skyviewer test_iqu.fits
+
+If the libraries are under a prefix other than /usr/local, add
+PREFIX=/that/prefix to the qmake command line. If libQGLViewer-qt5 is in a
+nonstandard directory, also add QGLVIEWER_DIR=/path/to/its/lib.
+
+A Linux build with Qt 5.9.7 and libQGLViewer 2.7.2 once failed to link
+with an undefined reference to QApplication::clipboard(). The workaround
+was to comment out the body of QGLViewer::snapshotToClipboard() in
+libQGLViewer. With that change, copying a snapshot of the view to the
+clipboard does not work.
 
    Microsoft Windows Build Instructions:
 
-The first step is to install the various required libraries.  Then unpack
-skyviewer and follow the Unix build instructions.
+An older version of Skyviewer was built under Windows XP with an older Qt
+and the MinGW environment. The current version has not been tested on
+Windows. Install the required libraries, then follow the Linux
+instructions.
 
-The LAMBDA team has built Skyviewer under Windows XP in the path using an 
-older Qt and the MinGW environment.
+   Notes:
 
-Please let us know of any successes or failures you encounter: 
+More recent versions of HEALPix no longer include the mk_xy2pix function.
+heal.cpp includes a copy from an earlier version, enabled by the
+NEED_MKXY2PIX flag at the top of that file. It is on by default. If you do
+not need it, remove the
+#define NEED_MKXY2PIX 1
+line from the top of heal.cpp.
+
+Please let us know of any successes or failures you encounter:
 http://lambda.gsfc.nasa.gov/contact/contact.cfm
-
-Mac OSX
-
-The LAMBDA team has built Skyviewer on a Mac using the Fink environment and Qt4.
-They anticipate that it should still build and hope to test this in the near future.
 
 => Usage
 
@@ -162,6 +222,11 @@ The list of selected pixel values can be saved to an ASCII file as
 multi-column list, with headers.
 
 => Change Log
+
+November 2026
+    * Simplified the build on modern macOS (Homebrew, Apple Silicon): skyviewer.pro now
+      finds QGLViewer.framework, rejects Qt 6, and fixes the framework install name
+      automatically. README has step-by-step install instructions.
 
 July 9, 2020
     * Release 1.1

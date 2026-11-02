@@ -1,0 +1,9 @@
+# qmake / make build products
+.qmake.stash
+Makefile
+moc/
+obj/
+ui/
+qrc_skyviewer.cpp
+skyviewer
+skyviewer.app/

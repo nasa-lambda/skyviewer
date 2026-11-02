@@ -57,66 +57,85 @@ SOURCES += main.cpp \
            controldialog.cpp \
            selectedpixelmodel.cpp 
 RESOURCES = skyviewer.qrc
-QT_VERSION=$$[QT_VERSION]
 LANGUAGE = C++
 TEMPLATE = app
+TARGET = skyviewer
 CONFIG += release warn_on qt thread
-CONFIG += thread
-LIBS += -L/usr/local/lib -lchealpix -lcfitsio
-QMAKE_CXXFLAGS="-DTOASCII=toAscii -DFROMASCII=fromAscii"
-QT += core
-contains( QT_VERSION, "^4\..*" ){
-  QT += xml opengl
-}
-contains( QT_VERSION, "^5\..*" ){
-  QT += widgets gui xml opengl
-  QMAKE_CXXFLAGS="-DTOASCII=toLatin1 -DFROMASCII=fromLatin1"
-}
-QMAKE_CFLAGS += $$(CFLAGS)
-QMAKE_CXXFLAGS += $$(CXXFLAGS)
-QMAKE_LFLAGS += $$(LDFLAGS)
-unix{
-  UI_DIR = ui
-  MOC_DIR = moc
-  OBJECTS_DIR = obj
-  INCLUDE_PATH = $$INCLUDE_DIR
-  INCLUDEPATH *= $$INCLUDE_PATH
-  DEPENDPATH *= $$INCLUDE_PATH
-  isEmpty( PREFIX ){
-    PREFIX=/usr/local
-  }
-  isEmpty( LIB_DIR ){
-    LIB_DIR = $$PREFIX/lib
-  }
-  isEmpty( INCLUDE_DIR ){
-    INCLUDE_DIR = $$PREFIX/include
-  }
-  LIBS += -L$$LIB_DIR
-  contains( QT_VERSION, "^4\..*" ){
-    LIBS += -lQGLViewer
-  }
-  contains( QT_VERSION, "^5\..*" ){
-    LIBS += -lQGLViewer-qt5
-  }
-#  !exists( $$INCLUDE_DIR/QGLViewer/qglviewer.h ){
-#    message( Unable to find QGLViewer/qglviewer.h in $$INCLUDE_PATH )
-#    message( Use qmake INCLUDE_DIR~Path/To/QGLViewer/HeaderFiles )
-#    error( Replace the ~ by the "equals" character in the above line )
-#  }
-#  !exists( $$LIB_DIR/libQGLViewer.so* ){
-#    message( Unable to find libQGLViewer.so in $$LIB_DIR )
-#    message( You should run qmake LIB_DIR~Path/To/QGLViewer/Lib.so )
-#    error( Replace the ~ by the "equals" character in the above line )
-#  }
-  macx{
-    LIBS *= -lobjc -lQGLViewer
-  }
-}
-win32{
-  QMAKE_CXXFLAGS = -TP -W1
-  QMAKE_CXXFLAGS_RELEASE = -O2
-  DEFINES *= QT_THREAD_SUPPORT
-  LIBS *= libQGLViewer
-}
-LIBS += -lchealpix -lcfitsio
+QT += core gui widgets xml opengl
+QMAKE_CXXFLAGS += -DTOASCII=toLatin1 -DFROMASCII=fromLatin1
 
+UI_DIR = ui
+MOC_DIR = moc
+OBJECTS_DIR = obj
+
+# Skyviewer (QGLWidget-based) only builds against Qt 5.
+!equals(QT_MAJOR_VERSION, 5) {
+    error("Skyviewer requires Qt 5, but this qmake is Qt $$[QT_VERSION]. \
+Run the Qt 5 qmake instead, e.g. /opt/homebrew/opt/qt@5/bin/qmake")
+}
+
+# Optional overrides on the qmake command line:
+#   qmake PREFIX=/some/prefix          where HEALPix (chealpix) and CFITSIO live
+#   qmake QGLVIEWER_DIR=/some/dir      directory containing QGLViewer.framework (macOS)
+#                                      or libQGLViewer-qt5 (Linux)
+
+macx {
+    # Qt 5.15 predates current macOS SDKs; the build works, so skip the warning.
+    CONFIG += sdk_no_version_check
+
+    # Homebrew prefix: /opt/homebrew on Apple Silicon, /usr/local on Intel.
+    isEmpty(PREFIX): PREFIX = $$system(brew --prefix 2>/dev/null)
+    isEmpty(PREFIX): PREFIX = /opt/homebrew
+    INCLUDEPATH += $$PREFIX/include
+    LIBS += -L$$PREFIX/lib
+
+    # Locate QGLViewer.framework: the README's recommended install location
+    # first, then libQGLViewer's default (/usr/local/lib).
+    isEmpty(QGLVIEWER_DIR) {
+        QGLVIEWER_SEARCH = $$(HOME)/Library/Frameworks /Library/Frameworks \
+                           /usr/local/lib $$PREFIX/lib
+        for(dir, QGLVIEWER_SEARCH) {
+            isEmpty(QGLVIEWER_DIR):exists($$dir/QGLViewer.framework): QGLVIEWER_DIR = $$dir
+        }
+    }
+    !exists($$QGLVIEWER_DIR/QGLViewer.framework) {
+        error("Could not find QGLViewer.framework. Rerun as: qmake QGLVIEWER_DIR=/dir/containing/the/framework")
+    }
+    message("Using QGLViewer.framework from $$QGLVIEWER_DIR")
+
+    QMAKE_CXXFLAGS += -F$$QGLVIEWER_DIR
+    LIBS += -F$$QGLVIEWER_DIR -framework QGLViewer -framework OpenGL
+    QMAKE_RPATHDIR += $$QGLVIEWER_DIR
+
+    # libQGLViewer's qmake build gives the framework a relative install name
+    # (QGLViewer.framework/Versions/2/QGLViewer), which dyld cannot resolve at
+    # launch. Point the executable at @rpath instead; this is a no-op if the
+    # framework already uses an @rpath or absolute install name.
+    QGLVIEWER_BIN = $$QGLVIEWER_DIR/QGLViewer.framework/QGLViewer
+    QGLVIEWER_ID = $$system(otool -D $$QGLVIEWER_BIN | tail -n 1)
+    !contains(QGLVIEWER_ID, ^[/@].*) {
+        QMAKE_POST_LINK += install_name_tool -change $$QGLVIEWER_ID \
+            @rpath/$$QGLVIEWER_ID $${TARGET}.app/Contents/MacOS/$${TARGET}
+    }
+}
+
+unix:!macx {
+    isEmpty(PREFIX): PREFIX = /usr/local
+    INCLUDEPATH += $$PREFIX/include
+    LIBS += -L$$PREFIX/lib
+    !isEmpty(QGLVIEWER_DIR) {
+        INCLUDEPATH += $$QGLVIEWER_DIR/../include
+        LIBS += -L$$QGLVIEWER_DIR
+        QMAKE_RPATHDIR += $$QGLVIEWER_DIR
+    }
+    LIBS += -lQGLViewer-qt5 -lGLU
+}
+
+win32 {
+    QMAKE_CXXFLAGS = -TP -W1
+    QMAKE_CXXFLAGS_RELEASE = -O2
+    DEFINES *= QT_THREAD_SUPPORT
+    LIBS *= libQGLViewer
+}
+
+LIBS += -lchealpix -lcfitsio
